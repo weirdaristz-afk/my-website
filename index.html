@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BaddieFlix</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Language Switch -->
+  <div class="lang-switch">
+    <button onclick="changeLang('en')">🇬🇧</button>
+    <button onclick="changeLang('es')">🇪🇸</button>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="start-screen" class="scene active">
+    <img src="images/intro.jpg" alt="Welcome" class="intro-img">
+    <button onclick="goToProfileHolder()">Enter the SlayVerse 💅</button>
+  </div>
+
+  <!-- Profile Holder -->
+  <div id="profile-holder" class="scene">
+    <h2>Choose Your Profile 🎭</h2>
+    <div id="profile-slot">
+      <p>No profile yet...</p>
+      <button onclick="goToProfileEditor()">Create Profile</button>
+    </div>
+  </div>
+
+  <!-- Profile Editor -->
+  <div id="profile-editor" class="scene">
+    <h2 data-i18n="profileHeader">Edit Your Profile 💋</h2>
+    <input type="text" id="profile-name" placeholder="Enter your name">
+
+    <div class="avatar-selection">
+      <p>Choose Your Avatar 🎭</p>
+      <div class="avatars">
+        <img src="profilePics/catgirl.png" onclick="selectAvatar(this)" />
+        <img src="profilePics/popcorn-babe.png" onclick="selectAvatar(this)" />
+        <img src="profilePics/sparkle-queen.png" onclick="selectAvatar(this)" />
+      </div>
+    </div>
+
+    <select id="fav-genre">
+      <option value="">Favorite Genre</option>
+      <option>Horror</option>
+      <option>Musical</option>
+      <option>Romance</option>
+      <option>Drama</option>
+    </select>
+
+    <button onclick="saveProfile()" data-i18n="saveButton">Save & Slay</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 SlayInterludeBaddies LLC. All glam, no shame 💄</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
