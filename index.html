@@ -3,80 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BaddieFlix - Your Slay Movie Universe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Pacifico&family=Indie+Flower&display=swap" rel="stylesheet" />
+  <title>BaddieFlix - The Real Slayflix Experience</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Indie+Flower&family=Quicksand&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Intro Overlay -->
-  <div id="intro-overlay">
-    <div id="intro-logo">BaddieFlix</div>
-    <div id="intro-text">Your Slay Movie Universe</div>
-  </div>
-
-  <!-- Language Switch -->
-  <nav id="main-nav">
-    <div class="lang-switch">
-      <button onclick="changeLang('en')" aria-label="English">🇬🇧</button>
-      <button onclick="changeLang('es')" aria-label="Spanish">🇪🇸</button>
-    </div>
-    <button id="profile-toggle-btn">Profile</button>
-  </nav>
-
-  <!-- Holiday Theme Banner -->
-  <div id="holiday-banner"></div>
-
-  <!-- Profile Holder -->
-  <section id="profile-holder" class="scene">
-    <h2 data-i18n="profileTitle">Your Profile</h2>
-    <div id="profile-display">
-      <p data-i18n="noProfile">No profile yet...</p>
-      <button onclick="openProfileEditor()" data-i18n="createProfile">Create Profile</button>
-    </div>
+  <!-- LOGIN SCREEN -->
+  <section id="login-screen" class="scene active">
+    <h1 class="logo">BaddieFlix</h1>
+    <input type="text" id="username-input" placeholder="Enter your name, queen" autocomplete="off" />
+    <button id="login-btn">Enter Slayland</button>
   </section>
 
-  <!-- Profile Editor -->
-  <section id="profile-editor" class="scene">
-    <h2 data-i18n="editProfile">Edit Your Profile 💋</h2>
-    <input type="text" id="profile-name" placeholder="Enter your name" />
-    <div class="avatar-selection">
-      <p data-i18n="chooseAvatar">Choose Your Avatar 🎭</p>
-      <div class="avatars">
-        <img src="profilePics/catgirl.png" alt="Catgirl" onclick="selectAvatar(this)" />
-        <img src="profilePics/popcorn-babe.png" alt="Popcorn Babe" onclick="selectAvatar(this)" />
-        <img src="profilePics/sparkle-queen.png" alt="Sparkle Queen" onclick="selectAvatar(this)" />
+  <!-- MAIN APP -->
+  <section id="app-screen" class="scene">
+    <header>
+      <div id="logo-header">BaddieFlix</div>
+      <div id="profile-info">
+        <span id="welcome-text"></span>
+        <button id="logout-btn" title="Logout">🚪</button>
       </div>
-    </div>
-    <select id="fav-genre">
-      <option value="" data-i18n="favGenre">Favorite Genre</option>
-      <option>Horror</option>
-      <option>Musical</option>
-      <option>Romance</option>
-      <option>Drama</option>
-      <option>Comedy</option>
-    </select>
-    <button onclick="saveProfile()" data-i18n="saveBtn">Save & Slay</button>
-    <button onclick="closeProfileEditor()" data-i18n="cancelBtn">Cancel</button>
-  </section>
-
-  <!-- Main Content: Categories -->
-  <section id="main-content" class="scene active">
-    <h1 data-i18n="welcomeMsg">Welcome to BaddieFlix 💅</h1>
+    </header>
 
     <nav id="category-nav">
-      <button class="category-btn active" data-category="all" data-i18n="catAll">All</button>
-      <button class="category-btn" data-category="movies" data-i18n="catMovies">Movies</button>
-      <button class="category-btn" data-category="mylist" data-i18n="catMyList">My List</button>
-      <button class="category-btn" data-category="watchagain" data-i18n="catWatchAgain">Watch Again</button>
-      <button class="category-btn" data-category="kids" data-i18n="catKids">Kids Side</button>
+      <button class="category-btn active" data-category="all">All</button>
+      <button class="category-btn" data-category="recent">Recent</button>
+      <button class="category-btn" data-category="mylist">My List</button>
+      <button class="category-btn" data-category="kids">Kids Side</button>
     </nav>
 
-    <!-- Genres Separator -->
-    <div id="movies-container"></div>
+    <main>
+      <h2 id="section-header">All Movies</h2>
+      <div id="movies-container"></div>
+    </main>
+
+    <!-- Movie Details Popup -->
+    <div id="movie-popup" class="hidden">
+      <div id="popup-content">
+        <button id="close-popup">✖</button>
+        <img id="popup-img" alt="Movie Cover" />
+        <h3 id="popup-title"></h3>
+        <p id="popup-description"></p>
+        <button id="add-mylist-btn">Add to My List</button>
+        <button id="mark-watched-btn">Mark as Watched</button>
+      </div>
+    </div>
   </section>
 
   <footer>
-    <p>&copy; 2025 SlayInterludeBaddies LLC. All glam, no shame 💄</p>
+    <p>&copy; 2025 SlayInterludeBaddies LLC. All rights reserved, babe 💖</p>
   </footer>
 
   <script src="script.js"></script>
