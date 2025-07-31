@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BaddieFlix</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Start Screen -->
+  <div id="start-screen" class="scene active">
+    <img src="images/intro.jpg" alt="Welcome" class="intro-img">
+    <button onclick="goToProfileHolder()">Enter the SlayVerse 💅</button>
+  </div>
+
+  <!-- Profile Holder -->
+  <div id="profile-holder" class="scene">
+    <h2>Choose Your Profile 🎭</h2>
+    <div id="profile-slot">
+      <p>No profile yet...</p>
+      <button onclick="goToProfileEditor()">Create Profile</button>
+    </div>
+  </div>
+
+  <!-- Profile Editor -->
+  <div id="profile-editor" class="scene">
+    <h2>Edit Your Profile 💋</h2>
+    <input type="text" id="profile-name" placeholder="Enter your name">
+    <select id="fav-genre">
+      <option value="">Favorite Genre</option>
+      <option>Horror</option>
+      <option>Musical</option>
+      <option>Romance</option>
+      <option>Drama</option>
+    </select>
+    <button onclick="saveProfile()">Save & Slay</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
