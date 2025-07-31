@@ -1,185 +1,113 @@
-/* Fonts */
+/* Calming colors for autism-friendly vibes */
+:root {
+  --bg-color: #f0f4f8;
+  --text-color: #222831;
+  --primary-color: #4ecca3;
+  --secondary-color: #393e46;
+  --accent-color: #00adb5;
+  --button-bg: #4ecca3;
+  --button-hover: #3fa88f;
+  --font-main: 'Quicksand', sans-serif;
+  --font-cute: 'Indie Flower', cursive;
+  --font-logo: 'Comfortaa', cursive;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Poppins', sans-serif;
   margin: 0;
-  background-color: var(--bg-color, #111);
-  color: var(--text-color, white);
-  transition: background-color 0.8s ease, color 0.8s ease;
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
-h1, h2 {
-  font-family: 'Pacifico', cursive;
-  margin-bottom: 1em;
+h1.logo, #logo-header {
+  font-family: var(--font-logo);
+  font-size: 3rem;
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--primary-color);
+  letter-spacing: 0.2em;
 }
 
-button {
-  background-color: #ff4da6;
-  border: none;
-  border-radius: 25px;
-  padding: 10px 25px;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 2rem;
+  background-color: var(--secondary-color);
   color: white;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1rem;
-  margin: 0.3em;
-  transition: background-color 0.3s ease;
+  font-family: var(--font-main);
 }
 
-button:hover, .category-btn.active {
-  background-color: #ff79b0;
-}
-
-#intro-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #000;
-  color: #ff4da6;
+#profile-info {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  z-index: 9999;
-  opacity: 1;
-  transition: opacity 1.5s ease;
-  font-family: 'Pacifico', cursive;
-}
-
-#intro-logo {
-  font-size: 4rem;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-  margin-bottom: 0.5em;
-  animation: fadeInUp 2s ease forwards;
-}
-
-#intro-text {
-  font-size: 1.5rem;
+  gap: 1rem;
   font-weight: 600;
-  opacity: 0;
-  animation: fadeIn 3s 1.8s forwards;
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-#main-nav {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 20px;
-  background-color: #222;
-  align-items: center;
-}
-
-.lang-switch button {
-  font-size: 1.4rem;
+#logout-btn {
   background: none;
   border: none;
-  cursor: pointer;
-  margin-left: 10px;
   color: white;
-  transition: transform 0.3s ease;
-}
-
-.lang-switch button:hover {
-  transform: scale(1.2);
-}
-
-#profile-toggle-btn {
-  margin-left: 20px;
-  background-color: #ff4da6;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-weight: 700;
-  transition: background-color 0.3s ease;
-}
-
-#profile-toggle-btn:hover {
-  background-color: #ff79b0;
-}
-
-#holiday-banner {
-  text-align: center;
-  font-family: 'Indie Flower', cursive;
   font-size: 1.3rem;
-  color: #ff4da6;
-  padding: 10px 0;
-  user-select: none;
-}
-
-.scene {
-  display: none;
-  padding: 20px;
-}
-
-.scene.active {
-  display: block;
-}
-
-#profile-holder,
-#profile-editor,
-#main-content {
-  max-width: 800px;
-  margin: 20px auto;
-  background-color: #222;
-  border-radius: 20px;
-  padding: 20px;
-}
-
-.avatars {
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-}
-
-.avatars img {
-  width: 80px;
-  border-radius: 50%;
-  margin: 0 10px;
   cursor: pointer;
-  border: 3px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.avatars img.selected {
-  border-color: #ff4da6;
-  transform: scale(1.1);
-}
-
-.avatars img:hover {
-  transform: scale(1.1) rotate(-2deg);
 }
 
 #category-nav {
+  margin: 1rem 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.category-btn {
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: var(--font-main);
+}
+
+.category-btn:hover,
+.category-btn.active {
+  background-color: var(--button-hover);
+}
+
+main {
+  padding: 0 2rem 3rem;
+}
+
+#section-header {
+  font-family: var(--font-cute);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
   text-align: center;
-  margin-bottom: 20px;
 }
 
 #movies-container {
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
-  gap: 15px;
+  gap: 20px;
 }
 
 .movie-card {
-  background-color: #333;
-  border-radius: 12px;
-  overflow: hidden;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .movie-card:hover {
@@ -188,42 +116,139 @@ button:hover, .category-btn.active {
 
 .movie-card img {
   width: 100%;
-  display: block;
+  height: 200px;
+  object-fit: cover;
 }
 
 .movie-info {
-  padding: 8px;
-  font-family: 'Poppins', sans-serif;
+  padding: 0.5rem 1rem 1rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  color: #ff4da6;
+  font-size: 1rem;
+  color: var(--secondary-color);
+  flex-grow: 1;
 }
 
-.genre-separator {
-  grid-column: 1/-1;
-  font-family: 'Indie Flower', cursive;
+/* Login Screen */
+#login-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-color);
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+#login-screen input {
   font-size: 1.2rem;
-  margin: 20px 0 10px 10px;
-  color: #ff79b0;
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: 2px solid var(--primary-color);
+  width: 300px;
+  max-width: 90vw;
 }
 
-/* Holiday Themes */
-:root {
-  --bg-color: #111;
-  --text-color: white;
+#login-screen button {
+  background-color: var(--primary-color);
+  border: none;
+  padding: 10px 30px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-body.holiday-christmas {
-  --bg-color: #013220;
-  --text-color: #ffe6e6;
+#login-screen button:hover {
+  background-color: var(--accent-color);
 }
 
-body.holiday-halloween {
-  --bg-color: #330000;
-  --text-color: #ffcc00;
+/* Movie Popup */
+#movie-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
-body.holiday-newyear {
-  --bg-color: #000011;
-  --text-color: #ffeeff;
+#movie-popup.hidden {
+  display: none;
+}
+
+#popup-content {
+  background-color: white;
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90vw;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-main);
+  color: var(--secondary-color);
+}
+
+#popup-content img {
+  width: 100%;
+  border-radius: 15px;
+  margin-bottom: 1rem;
+}
+
+#popup-content h3 {
+  margin: 0.5rem 0 1rem;
+  font-family: var(--font-cute);
+  color: var(--primary-color);
+}
+
+#popup-content p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#popup-content button {
+  background-color: var(--primary-color);
+  border: none;
+  padding: 10px 20px;
+  margin: 0 0.5rem;
+  border-radius: 25px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#popup-content button:hover {
+  background-color: var(--accent-color);
+}
+
+#close-popup {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+
+/* Scene toggling */
+.scene {
+  display: none;
+}
+
+.scene.active {
+  display: block;
 }
