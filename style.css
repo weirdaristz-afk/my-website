@@ -1,253 +1,135 @@
-:root {
-  --bg-color: #f0f4f8;
-  --text-color: #222831;
-  --primary-color: #4ecca3;
-  --secondary-color: #393e46;
-  --accent-color: #00adb5;
-  --button-bg: #4ecca3;
-  --button-hover: #3fa88f;
-  --font-main: 'Quicksand', sans-serif;
-  --font-cute: 'Indie Flower', cursive;
-  --font-logo: 'Comfortaa', cursive;
+// GLOBALS
+const DEFAULT_USER_KEY = "guest_user";
+
+let currentUser = loadUser() || { name: "Guest", myList: [], watched: [] };
+
+const movieData = [
+  { id: 1, title: "Slay or Die", genre: "Horror", category: "all", img: "images/movie1.jpg", description: "A dark tale of survival and sass." },
+  { id: 2, title: "Love & Glitter", genre: "Romance", category: "all", img: "images/movie2.jpg", description: "Sparkly love story with drama and glam." },
+  { id: 3, title: "Dance Fever", genre: "Musical", category: "all", img: "images/movie3.jpg", description: "Get your groove on in this musical blast." },
+  { id: 4, title: "Comedy Night", genre: "Comedy", category: "all", img: "images/movie4.jpg", description: "Laugh out loud with this baddie comedy." },
+  { id: 5, title: "Kiddo Fun", genre: "Kids", category: "kids", img: "images/movie5.jpg", description: "Wholesome fun for the little stars." }
+];
+
+// DOM elements
+const welcomeText = document.getElementById("welcome-text");
+const moviesContainer = document.getElementById("movies-container");
+const sectionHeader = document.getElementById("section-header");
+
+const moviePopup = document.getElementById("movie-popup");
+const popupImg = document.getElementById("popup-img");
+const popupTitle = document.getElementById("popup-title");
+const popupDescription = document.getElementById("popup-description");
+const addMyListBtn = document.getElementById("add-mylist-btn");
+const markWatchedBtn = document.getElementById("mark-watched-btn");
+const closePopupBtn = document.getElementById("close-popup");
+
+const resetBtn = document.getElementById("reset-btn");
+const categoryButtons = document.querySelectorAll(".category-btn");
+
+// Save user to localStorage
+function saveUser() {
+  localStorage.setItem(DEFAULT_USER_KEY, JSON.stringify(currentUser));
 }
 
-* {
-  box-sizing: border-box;
+// Load user from localStorage
+function loadUser() {
+  const data = localStorage.getItem(DEFAULT_USER_KEY);
+  return data ? JSON.parse(data) : null;
 }
 
-body {
-  margin: 0;
-  font-family: var(--font-main);
-  background-color: var(--bg-color);
-  color: var(--text-color);
+// Show movies filtered by category
+function displayMovies(category = "all") {
+  moviesContainer.innerHTML = "";
+  let filteredMovies = [];
+
+  if (category === "all") {
+    filteredMovies = movieData;
+    sectionHeader.innerText = "All Movies";
+  } else if (category === "mylist") {
+    filteredMovies = movieData.filter(m => currentUser.myList.includes(m.id));
+    sectionHeader.innerText = "My List";
+  } else if (category === "recent") {
+    filteredMovies = movieData.filter(m => currentUser.watched.includes(m.id));
+    sectionHeader.innerText = "Recent Movies";
+  } else if (category === "kids") {
+    filteredMovies = movieData.filter(m => m.category === "kids");
+    sectionHeader.innerText = "Kids Side";
+  } else {
+    filteredMovies = movieData.filter(m => m.category === category);
+  }
+
+  filteredMovies.forEach(movie => {
+    const card = document.createElement("div");
+    card.className = "movie-card";
+    card.innerHTML = `
+      <img src="${movie.img}" alt="${movie.title}" />
+      <div class="movie-info">${movie.title}</div>
+    `;
+    card.addEventListener("click", () => openMoviePopup(movie));
+    moviesContainer.appendChild(card);
+  });
 }
 
-h1.logo, #logo-header {
-  font-family: var(--font-logo);
-  font-size: 3rem;
-  text-align: center;
-  margin-top: 1rem;
-  color: var(--primary-color);
-  letter-spacing: 0.2em;
+// Open movie popup
+function openMoviePopup(movie) {
+  popupImg.src = movie.img;
+  popupTitle.innerText = movie.title;
+  popupDescription.innerText = movie.description;
+
+  addMyListBtn.style.display = currentUser.myList.includes(movie.id) ? "none" : "inline-block";
+  markWatchedBtn.style.display = currentUser.watched.includes(movie.id) ? "none" : "inline-block";
+
+  addMyListBtn.onclick = () => {
+    if (!currentUser.myList.includes(movie.id)) {
+      currentUser.myList.push(movie.id);
+      saveUser();
+      displayMovies(getCurrentCategory());
+      openMoviePopup(movie);
+    }
+  };
+
+  markWatchedBtn.onclick = () => {
+    if (!currentUser.watched.includes(movie.id)) {
+      currentUser.watched.push(movie.id);
+      saveUser();
+      displayMovies(getCurrentCategory());
+      openMoviePopup(movie);
+    }
+  };
+
+  moviePopup.classList.remove("hidden");
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 2rem;
-  background-color: var(--secondary-color);
-  color: white;
-  font-family: var(--font-main);
+// Close popup
+closePopupBtn.onclick = () => {
+  moviePopup.classList.add("hidden");
+};
+
+// Get active category
+function getCurrentCategory() {
+  return document.querySelector(".category-btn.active")?.dataset.category || "all";
 }
 
-#profile-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-weight: 600;
-}
+// Reset My List & Watched data
+resetBtn.onclick = () => {
+  if (confirm("Are you sure you wanna reset your My List & Watched? This can't be undone, babe!")) {
+    currentUser.myList = [];
+    currentUser.watched = [];
+    saveUser();
+    displayMovies(getCurrentCategory());
+  }
+};
 
-#logout-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.3rem;
-  cursor: pointer;
-}
+// Category button clicks
+categoryButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    categoryButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    displayMovies(btn.dataset.category);
+  });
+});
 
-#category-nav {
-  margin: 1rem 2rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.category-btn {
-  background-color: var(--button-bg);
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-family: var(--font-main);
-}
-
-.category-btn:hover,
-.category-btn.active {
-  background-color: var(--button-hover);
-}
-
-main {
-  padding: 0 2rem 3rem;
-}
-
-#section-header {
-  font-family: var(--font-cute);
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: var(--accent-color);
-  text-align: center;
-}
-
-#movies-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
-  gap: 20px;
-}
-
-.movie-card {
-  background-color: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: transform 0.25s ease;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-}
-
-.movie-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.movie-info {
-  padding: 0.5rem 1rem 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--secondary-color);
-  flex-grow: 1;
-}
-
-/* Login Screen */
-#login-screen {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bg-color);
-  padding: 2rem;
-  gap: 1.5rem;
-}
-
-#login-screen input {
-  font-size: 1.2rem;
-  padding: 10px 15px;
-  border-radius: 25px;
-  border: 2px solid var(--primary-color);
-  width: 300px;
-  max-width: 90vw;
-}
-
-#login-screen button {
-  background-color: var(--primary-color);
-  border: none;
-  padding: 10px 30px;
-  color: white;
-  font-weight: 700;
-  font-size: 1.2rem;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#login-screen button:hover {
-  background-color: var(--accent-color);
-}
-
-/* Movie Popup */
-#movie-popup {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-#movie-popup.hidden {
-  display: none;
-}
-
-#popup-content {
-  background-color: white;
-  border-radius: 20px;
-  padding: 2rem;
-  max-width: 400px;
-  width: 90vw;
-  position: relative;
-  text-align: center;
-  font-family: var(--font-main);
-  color: var(--secondary-color);
-}
-
-#popup-content img {
-  width: 100%;
-  border-radius: 15px;
-  margin-bottom: 1rem;
-}
-
-#popup-content h3 {
-  margin: 0.5rem 0 1rem;
-  font-family: var(--font-cute);
-  color: var(--primary-color);
-}
-
-#popup-content p {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-#popup-content button {
-  background-color: var(--primary-color);
-  border: none;
-  padding: 10px 20px;
-  margin: 0 0.5rem;
-  border-radius: 25px;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#popup-content button:hover {
-  background-color: var(--accent-color);
-}
-
-#close-popup {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--secondary-color);
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: var(--secondary-color);
-}
-
-/* Scene toggling */
-.scene {
-  display: none;
-}
-
-.scene.active {
-  display: block;
-}
+// Initial load
+welcomeText.innerText = `Hey, ${currentUser.name} Queen! 👑`;
+displayMovies();
