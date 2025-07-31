@@ -1,6 +1,5 @@
 // GLOBALS
 let currentUser = null; // { name: string, myList: [], watched: [] }
-let movies = [];
 const movieData = [
   { id: 1, title: "Slay or Die", genre: "Horror", category: "all", img: "images/movie1.jpg", description: "A dark tale of survival and sass." },
   { id: 2, title: "Love & Glitter", genre: "Romance", category: "all", img: "images/movie2.jpg", description: "Sparkly love story with drama and glam." },
@@ -9,14 +8,13 @@ const movieData = [
   { id: 5, title: "Kiddo Fun", genre: "Kids", category: "kids", img: "images/movie5.jpg", description: "Wholesome fun for the little stars." }
 ];
 
-// Scene elements
+// DOM elements
 const loginScreen = document.getElementById("login-screen");
 const appScreen = document.getElementById("app-screen");
 const welcomeText = document.getElementById("welcome-text");
 const moviesContainer = document.getElementById("movies-container");
 const sectionHeader = document.getElementById("section-header");
 
-// Movie Popup elements
 const moviePopup = document.getElementById("movie-popup");
 const popupImg = document.getElementById("popup-img");
 const popupTitle = document.getElementById("popup-title");
@@ -25,21 +23,19 @@ const addMyListBtn = document.getElementById("add-mylist-btn");
 const markWatchedBtn = document.getElementById("mark-watched-btn");
 const closePopupBtn = document.getElementById("close-popup");
 
-// Login elements
 const usernameInput = document.getElementById("username-input");
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 
-// Categories
 const categoryButtons = document.querySelectorAll(".category-btn");
 
-// Utility to save user data in localStorage
+// Save user to localStorage
 function saveUser() {
   if (!currentUser) return;
   localStorage.setItem(`user_${currentUser.name}`, JSON.stringify(currentUser));
 }
 
-// Load user data from localStorage
+// Load user from localStorage or create new
 function loadUser(name) {
   const data = localStorage.getItem(`user_${name}`);
   if (!data) {
@@ -48,7 +44,7 @@ function loadUser(name) {
   return JSON.parse(data);
 }
 
-// Display movies filtered by category
+// Show movies filtered by category
 function displayMovies(category = "all") {
   moviesContainer.innerHTML = "";
   let filteredMovies = [];
@@ -81,29 +77,31 @@ function displayMovies(category = "all") {
   });
 }
 
-// Open movie detail popup
+// Open movie popup
 function openMoviePopup(movie) {
   popupImg.src = movie.img;
   popupTitle.innerText = movie.title;
   popupDescription.innerText = movie.description;
 
-  // Buttons visibility & state
   addMyListBtn.style.display = currentUser.myList.includes(movie.id) ? "none" : "inline-block";
   markWatchedBtn.style.display = currentUser.watched.includes(movie.id) ? "none" : "inline-block";
 
-  // Button events
   addMyListBtn.onclick = () => {
-    currentUser.myList.push(movie.id);
-    saveUser();
-    displayMovies(getCurrentCategory());
-    openMoviePopup(movie); // Refresh popup buttons
+    if (!currentUser.myList.includes(movie.id)) {
+      currentUser.myList.push(movie.id);
+      saveUser();
+      displayMovies(getCurrentCategory());
+      openMoviePopup(movie);
+    }
   };
 
   markWatchedBtn.onclick = () => {
-    currentUser.watched.push(movie.id);
-    saveUser();
-    displayMovies(getCurrentCategory());
-    openMoviePopup(movie); // Refresh popup buttons
+    if (!currentUser.watched.includes(movie.id)) {
+      currentUser.watched.push(movie.id);
+      saveUser();
+      displayMovies(getCurrentCategory());
+      openMoviePopup(movie);
+    }
   };
 
   moviePopup.classList.remove("hidden");
@@ -114,12 +112,12 @@ closePopupBtn.onclick = () => {
   moviePopup.classList.add("hidden");
 };
 
-// Get currently selected category button
+// Get active category
 function getCurrentCategory() {
   return document.querySelector(".category-btn.active")?.dataset.category || "all";
 }
 
-// Login handler
+// Login
 loginBtn.onclick = () => {
   const username = usernameInput.value.trim();
   if (!username) {
@@ -133,7 +131,7 @@ loginBtn.onclick = () => {
   displayMovies();
 };
 
-// Logout handler
+// Logout
 logoutBtn.onclick = () => {
   currentUser = null;
   usernameInput.value = "";
