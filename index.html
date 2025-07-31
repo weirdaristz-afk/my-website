@@ -83,12 +83,20 @@
         select {
             background-color: var(--card-bg);
         }
+        /* Custom Player Styles */
+        .player-controls {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #playerPage:hover .player-controls {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-black">
 
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 md:px-16 py-4 flex justify-between items-center transition-colors duration-500 bg-transparent">
+    <header id="mainHeader" class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 md:px-16 py-4 flex justify-between items-center transition-all duration-500 bg-transparent">
         <div class="flex items-center space-x-8">
             <h1 class="text-3xl font-bold text-theme-primary cursor-pointer" data-page="homePage">CineStream</h1>
             <nav class="hidden md:flex items-center space-x-4">
@@ -125,7 +133,7 @@
                     <h2 id="heroTitle" class="text-4xl md:text-6xl font-bold max-w-xl"></h2>
                     <p id="heroDescription" class="mt-4 max-w-xl text-lg"></p>
                     <div class="mt-8 flex space-x-4">
-                        <button class="flex items-center bg-white text-black font-bold rounded px-6 py-2 hover:bg-gray-200 transition">
+                        <button id="heroPlayBtn" class="flex items-center bg-white text-black font-bold rounded px-6 py-2 hover:bg-gray-200 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M4 3.222v13.556c0 .414.464.695.84.465l11.16-6.778a.5.5 0 000-.93L4.84 2.757A.5.5 0 004 3.222z" /></svg>
                             Play
                         </button>
@@ -140,41 +148,60 @@
             <section id="carouselSection" class="px-4 sm:px-8 md:px-16 py-8 space-y-8 -mt-24 relative z-20"></section>
         </div>
         
-        <!-- Genres Page -->
+        <!-- Other Pages (Genres, Search, etc.) -->
         <div id="genresPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
             <h2 id="genresPageTitle" class="text-3xl font-bold mb-8">Browse by Genre</h2>
             <div id="genresGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
         </div>
-
-        <!-- Genre Results Page -->
         <div id="genreResultsPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
             <h2 id="genreResultsTitle" class="text-3xl font-bold mb-8"></h2>
             <div id="genreResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
         </div>
-
-        <!-- New & Popular Page -->
         <div id="newAndPopularPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
             <h2 class="text-3xl font-bold mb-8">New & Popular</h2>
             <div id="newAndPopularGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
         </div>
-
-        <!-- My List Page -->
         <div id="myListPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
             <h2 class="text-3xl font-bold mb-8">My List</h2>
             <div id="myListGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
         </div>
-
-        <!-- Search Results Page -->
         <div id="searchResultsPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
             <h2 class="text-2xl font-bold mb-4">Search Results</h2>
             <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
         </div>
-        
+    </div>
+    
+    <!-- Video Player Page -->
+    <div id="playerPage" class="hidden fixed inset-0 bg-black z-[100] flex items-center justify-center">
+        <video id="videoPlayer" class="w-full h-full"></video>
+        <!-- Custom Controls -->
+        <div class="player-controls absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+            <input type="range" id="progressBar" class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer" value="0" step="0.1">
+            <div class="flex items-center justify-between mt-2 text-white">
+                <div class="flex items-center space-x-4">
+                    <button id="playPauseBtn"></button>
+                    <div id="timeDisplay">00:00 / 00:00</div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="subtitleBtn" class="hidden">CC</button>
+                    <button id="fullscreenBtn">FS</button>
+                </div>
+            </div>
+        </div>
+        <!-- Back Button -->
+        <button id="closePlayerBtn" class="absolute top-5 right-5 text-white text-4xl z-10">&times;</button>
+        <!-- Subtitle Menu -->
+        <div id="subtitleMenu" class="hidden absolute bottom-16 right-20 bg-black/80 rounded p-2"></div>
+        <!-- Player Error Message -->
+        <div id="playerError" class="hidden absolute text-white text-center bg-red-800 p-4 rounded z-20">
+            <h3 class="font-bold text-xl">Video Error</h3>
+            <p>Could not load video. Please ensure the file exists and the path is correct.</p>
+        </div>
     </div>
 
 
     <!-- Footer -->
-    <footer class="px-4 sm:px-8 md:px-16 py-8 mt-16 border-t border-gray-800">
+    <footer id="mainFooter" class="px-4 sm:px-8 md:px-16 py-8 mt-16 border-t border-gray-800">
         <div class="max-w-5xl mx-auto text-gray-400">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <a href="#" class="hover:text-white">FAQ</a>
@@ -207,6 +234,15 @@
                 </div>
             </div>
             <div class="p-8">
+                 <div class="flex space-x-4 mb-6">
+                    <button id="modalPlayBtn" class="flex-grow flex items-center justify-center bg-white text-black font-bold rounded px-6 py-3 hover:bg-gray-200 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M4 3.222v13.556c0 .414.464.695.84.465l11.16-6.778a.5.5 0 000-.93L4.84 2.757A.5.5 0 004 3.222z" /></svg>
+                        Play
+                    </button>
+                    <button id="modalMyListBtn" class="flex items-center justify-center bg-gray-700 bg-opacity-70 font-bold rounded p-3 hover:bg-gray-600 transition">
+                        {/* SVG will be added here by JS */}
+                    </button>
+                </div>
                 <!-- Tabs -->
                 <div id="modalTabs" class="border-b border-gray-700">
                     <nav class="flex space-x-8" aria-label="Tabs">
@@ -222,11 +258,6 @@
                         <p><strong>Genre:</strong> <span id="modalGenre"></span></p>
                         <p><strong>Rating:</strong> <span id="modalRating"></span></p>
                         <p><strong>Type:</strong> <span id="modalType"></span></p>
-                    </div>
-                    <div class="mt-6">
-                        <button id="modalMyListBtn" class="w-full flex items-center justify-center bg-gray-700 bg-opacity-70 font-bold rounded px-6 py-3 hover:bg-gray-600 transition">
-                            <span></span>
-                        </button>
                     </div>
                 </div>
 
@@ -244,49 +275,52 @@
 
     <script>
         // --- MOCK DATA ---
+        // IMPORTANT: The 'videoSrc' and 'subtitles.src' paths must match your file structure in GitHub.
+        // Example: 'videos/monster_high_the_movie.mp4'
         const movieData = {
             "new-releases": [
-                { id: 1, title: "Monster High: The Movie", type: "Movie", genre: "Musical Fantasy", rating: "6.1/10", description: "Frankie Stein starts at Monster High and must learn to navigate high school while hiding her human side, all while a threat to the school emerges.", image: "https://placehold.co/800x450/DE3163/FFFFFF?text=Monster+High:+The+Movie", heroImage: "https://placehold.co/1920x1080/DE3163/FFFFFF?text=Monster+High:+The+Movie" },
-                { id: 2, title: "Monster High 2", type: "Movie", genre: "Musical Fantasy", rating: "6.7/10", description: "Clawdeen Wolf, Draculaura, and Frankie Stein face new challenges, new students, and new powers as they navigate their sophomore year at Monster High.", image: "https://placehold.co/800x450/FF7F50/FFFFFF?text=Monster+High+2" },
-            ],
-            "popular": [
-                { id: 4, title: "Frights, Camera, Action!", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir to the vampire throne. She and her best ghoulfriends embark on a fangtastic adventure to Transylvania.", image: "https://placehold.co/800x450/9FE2BF/000000?text=Frights,+Camera,+Action!" },
-                { id: 5, title: "Boo York, Boo York", type: "Movie", genre: "Musical Animation", rating: "6.9/10", description: "The ghouls take a bite out of Boo York! When Cleo De Nile is invited to a gala celebrating a magical comet, she brings her friends for a monstrously fun time.", image: "https://placehold.co/800x450/40E0D0/FFFFFF?text=Boo+York,+Boo+York" },
-            ],
-             "tv-series": [
-                { id: 10, title: "Monster High", type: "TV Show", genre: "Animation", rating: "7.2/10", description: "The series follows Frankie Stein, Clawdeen Wolf and Draculaura as they navigate the hilarity of high school in the hallowed halls of Monster High.", image: "https://placehold.co/800x450/8A2BE2/FFFFFF?text=Monster+High+Series", 
-                  seasons: [
-                      { season: 1, episodes: [
-                          { episode: 1, title: "The Monstering", description: "It's the first day of school at Monster High! Clawdeen is nervous about her werewolf instincts, while Frankie tries to make new friends." },
-                          { episode: 2, title: "Food Fight", description: "Draculaura tries to convince the school to add vegetarian options to the menu, leading to a massive food fight." },
-                          { episode: 3, title: "Unlife's a Scream", description: "The ghouls plan a party, but things go haywire when Cleo's competitive nature takes over." },
-                      ]},
-                      { season: 2, episodes: [
-                          { episode: 1, title: "That's a Wrap", description: "Cleo directs the school play, but her vision clashes with everyone else's ideas." },
-                          { episode: 2, title: "The Ghoul Next Door", description: "A new student arrives, and the ghouls try to make him feel welcome, despite his shy nature." },
-                      ]}
+                { id: 1, title: "Monster High: The Movie", type: "Movie", genre: "Musical Fantasy", rating: "6.1/10", description: "Frankie Stein starts at Monster High...", image: "https://placehold.co/800x450/DE3163/FFFFFF?text=Monster+High:+The+Movie", heroImage: "https://placehold.co/1920x1080/DE3163/FFFFFF?text=Monster+High:+The+Movie", videoSrc: "videos/monster_high_the_movie.mp4", 
+                  subtitles: [
+                      { lang: 'en', label: 'English', src: 'videos/subs/mh_movie_en.vtt' },
+                      { lang: 'es', label: 'Español', src: 'videos/subs/mh_movie_es.vtt' }
                   ]
                 },
-                { id: 11, title: "Adventures of the Ghoul Squad", type: "TV Show", genre: "Web Series", rating: "N/A", description: "Follow the adventures of Draculaura, Frankie, Clawdeen, Lagoona, and Cleo as they solve mysteries and help monsters in need.", image: "https://placehold.co/800x450/3CB371/FFFFFF?text=Ghoul+Squad",
+            ],
+            "popular": [
+                { id: 4, title: "Frights, Camera, Action!", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir...", image: "https://placehold.co/800x450/9FE2BF/000000?text=Frights,+Camera,+Action!", videoSrc: "videos/frights_camera_action.mp4" },
+            ],
+             "tv-series": [
+                { id: 10, title: "Monster High", type: "TV Show", genre: "Animation", rating: "7.2/10", description: "The series follows Frankie Stein, Clawdeen Wolf and Draculaura...", image: "https://placehold.co/800x450/8A2BE2/FFFFFF?text=Monster+High+Series", 
                   seasons: [
                       { season: 1, episodes: [
-                          { episode: 1, title: "Calling All Ghouls", description: "The Ghoul Squad is formed to help a ghost find her lost voice." },
-                          { episode: 2, title: "The Case of the Missing Munch", description: "The cafeteria's famous spooky snacks are disappearing, and the squad is on the case." },
-                      ]}
+                          { episode: 1, title: "The Monstering", description: "It's the first day of school at Monster High!...", videoSrc: "videos/mh_s01e01.mp4", subtitles: [{ lang: 'en', label: 'English', src: 'videos/subs/mh_s01e01_en.vtt' }] },
+                          { episode: 2, title: "Food Fight", description: "Draculaura tries to convince the school...", videoSrc: "videos/mh_s01e02.mp4" },
+                      ]},
                   ]
                 },
              ],
              "classics": [
-                { id: 6, title: "Ghouls Rule!", type: "Movie", genre: "Animation", rating: "6.6/10", description: "Frankie Stein and her friends discover that ghouls and 'Normies' once had a great relationship. They set out to prove that the past doesn't have to define the future.", image: "https://placehold.co/800x450/CCCCFF/000000?text=Ghouls+Rule!" },
-                { id: 7, title: "Why Do Ghouls Fall in Love?", type: "Movie", genre: "Animation", rating: "7.1/10", description: "Draculaura's Sweet 1600th birthday is approaching, but her celebration is complicated by the arrival of two boys vying for her affection.", image: "https://placehold.co/800x450/DFFF00/000000?text=Why+Do+Ghouls+Fall+in+Love?" },
-                { id: 8, title: "Scaris: City of Frights", type: "Movie", genre: "Animation", rating: "6.7/10", description: "Clawdeen Wolf gets the chance to apprentice for the legendary fashion designer Madame Ghostier, and she and her friends pack their bags for Scaris, France.", image: "https://placehold.co/800x450/FFBF00/FFFFFF?text=Scaris:+City+of+Frights" },
-                { id: 9, title: "Haunted", type: "Movie", genre: "Animation", rating: "6.7/10", description: "When Spectra Vondergeist goes back to her old ghost school to find out why Monster High is being haunted, the other ghouls use Boogey Sand to become ghosts to follow her.", image: "https://placehold.co/800x450/FF00FF/FFFFFF?text=Haunted" },
-            ]
+                { id: 6, title: "Ghouls Rule!", type: "Movie", genre: "Animation", rating: "6.6/10", description: "Frankie Stein and her friends discover that ghouls and 'Normies'...", image: "https://placehold.co/800x450/CCCCFF/000000?text=Ghouls+Rule!", videoSrc: "videos/ghouls_rule.mp4" },
+             ]
         };
 
         let myList = [];
 
         // --- DOM ELEMENTS ---
+        const mainHeader = document.getElementById('mainHeader');
+        const pageContainer = document.getElementById('pageContainer');
+        const mainFooter = document.getElementById('mainFooter');
+        const playerPage = document.getElementById('playerPage');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const closePlayerBtn = document.getElementById('closePlayerBtn');
+        const playerError = document.getElementById('playerError');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const subtitleBtn = document.getElementById('subtitleBtn');
+        const subtitleMenu = document.getElementById('subtitleMenu');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        
         const modal = document.getElementById('modal');
         const closeModalBtn = document.getElementById('closeModal');
         const navLinks = document.querySelectorAll('.nav-link, h1[data-page]');
@@ -297,6 +331,127 @@
         const episodesContent = document.getElementById('episodesContent');
         const seasonSelector = document.getElementById('seasonSelector');
         const episodeList = document.getElementById('episodeList');
+
+        // --- PLAYER LOGIC ---
+        const playVideo = (content) => {
+            if (!content || !content.videoSrc) {
+                console.error("No video source provided.");
+                return;
+            }
+            playerError.classList.add('hidden');
+            mainHeader.classList.add('hidden');
+            pageContainer.classList.add('hidden');
+            mainFooter.classList.add('hidden');
+            playerPage.classList.remove('hidden');
+            
+            videoPlayer.innerHTML = ''; // Clear old tracks
+            if (content.subtitles) {
+                content.subtitles.forEach(sub => {
+                    const track = document.createElement('track');
+                    track.kind = 'subtitles';
+                    track.label = sub.label;
+                    track.srclang = sub.lang;
+                    track.src = sub.src;
+                    videoPlayer.appendChild(track);
+                });
+            }
+
+            videoPlayer.src = content.videoSrc;
+            videoPlayer.play();
+            closeModal();
+            setupSubtitleMenu();
+        };
+
+        const closePlayer = () => {
+            mainHeader.classList.remove('hidden');
+            pageContainer.classList.remove('hidden');
+            mainFooter.classList.remove('hidden');
+            playerPage.classList.add('hidden');
+            videoPlayer.pause();
+            videoPlayer.src = "";
+        };
+        closePlayerBtn.addEventListener('click', closePlayer);
+
+        videoPlayer.addEventListener('error', () => {
+            console.error("Error loading video:", videoPlayer.src);
+            console.error("Please ensure the video file exists at the specified path and the server can serve it.");
+            playerError.classList.remove('hidden');
+            setTimeout(() => {
+                playerError.classList.add('hidden');
+                closePlayer();
+            }, 5000);
+        });
+
+        const togglePlay = () => {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        };
+        playPauseBtn.addEventListener('click', togglePlay);
+        videoPlayer.addEventListener('play', () => playPauseBtn.innerHTML = '❚❚');
+        videoPlayer.addEventListener('pause', () => playPauseBtn.innerHTML = '▶');
+
+        const formatTime = (time) => {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        };
+
+        videoPlayer.addEventListener('timeupdate', () => {
+            progressBar.value = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+            timeDisplay.textContent = `${formatTime(videoPlayer.currentTime)} / ${formatTime(videoPlayer.duration || 0)}`;
+        });
+
+        progressBar.addEventListener('input', () => {
+            videoPlayer.currentTime = (progressBar.value / 100) * videoPlayer.duration;
+        });
+
+        const setupSubtitleMenu = () => {
+            subtitleMenu.innerHTML = '';
+            const tracks = videoPlayer.textTracks;
+            if (tracks.length === 0) {
+                subtitleBtn.classList.add('hidden');
+                return;
+            }
+            subtitleBtn.classList.remove('hidden');
+
+            const offBtn = document.createElement('button');
+            offBtn.textContent = 'Off';
+            offBtn.className = 'block w-full text-left p-1 hover:bg-gray-700';
+            offBtn.onclick = () => {
+                for(let i = 0; i < tracks.length; i++) tracks[i].mode = 'hidden';
+                subtitleMenu.classList.add('hidden');
+            };
+            subtitleMenu.appendChild(offBtn);
+
+            for(let i = 0; i < tracks.length; i++) {
+                const track = tracks[i];
+                const btn = document.createElement('button');
+                btn.textContent = track.label;
+                btn.className = 'block w-full text-left p-1 hover:bg-gray-700';
+                btn.onclick = () => {
+                    for(let j = 0; j < tracks.length; j++) tracks[j].mode = 'hidden';
+                    track.mode = 'showing';
+                    subtitleMenu.classList.add('hidden');
+                };
+                subtitleMenu.appendChild(btn);
+            }
+        };
+
+        subtitleBtn.addEventListener('click', () => {
+            subtitleMenu.classList.toggle('hidden');
+        });
+        
+        fullscreenBtn.addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                playerPage.requestFullscreen();
+            }
+        });
+
 
         // --- PAGE NAVIGATION ---
         const showPage = (pageId, filter = null) => {
@@ -339,19 +494,18 @@
             const btn = document.getElementById('modalMyListBtn');
             const inList = myList.includes(movieId);
             btn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     ${inList ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />' : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />'}
                 </svg>
-                <span>${inList ? 'Remove from My List' : 'Add to My List'}</span>
             `;
             btn.onclick = () => toggleMyList(movieId);
         };
 
         // --- HELPER FUNCTIONS ---
-        const findMovieById = (id) => {
+        const findContentById = (id) => {
             for (const category in movieData) {
-                const movie = movieData[category].find(m => m.id === id);
-                if (movie) return movie;
+                const content = movieData[category].find(m => m.id === id);
+                if (content) return content;
             }
             return null;
         };
@@ -380,46 +534,47 @@
             if (season) {
                 season.episodes.forEach(ep => {
                     const epElement = document.createElement('div');
-                    epElement.className = 'border-b border-gray-700 pb-2';
+                    epElement.className = 'border-b border-gray-700 pb-2 cursor-pointer hover:bg-gray-700 p-2 rounded';
                     epElement.innerHTML = `
                         <h4 class="font-bold text-lg">${ep.episode}. ${ep.title}</h4>
                         <p class="text-sm text-gray-400">${ep.description}</p>
                     `;
+                    epElement.addEventListener('click', () => playVideo(ep));
                     episodeList.appendChild(epElement);
                 });
             }
         };
 
-        const openModal = (movieId) => {
-            const movie = findMovieById(movieId);
-            if (!movie) return;
+        const openModal = (contentId) => {
+            const content = findContentById(contentId);
+            if (!content) return;
             
-            // Populate general info
-            document.getElementById('modalImage').src = movie.image;
-            document.getElementById('modalTitle').textContent = movie.title;
-            document.getElementById('modalDescription').textContent = movie.description;
-            document.getElementById('modalGenre').textContent = movie.genre;
-            document.getElementById('modalRating').textContent = movie.rating;
-            document.getElementById('modalType').textContent = movie.type;
-            updateModalMyListButton(movie.id);
+            document.getElementById('modalImage').src = content.image;
+            document.getElementById('modalTitle').textContent = content.title;
+            document.getElementById('modalDescription').textContent = content.description;
+            document.getElementById('modalGenre').textContent = content.genre;
+            document.getElementById('modalRating').textContent = content.rating;
+            document.getElementById('modalType').textContent = content.type;
+            updateModalMyListButton(content.id);
 
-            // Handle TV Show seasons
-            if (movie.type === 'TV Show' && movie.seasons) {
+            document.getElementById('modalPlayBtn').onclick = () => playVideo(content);
+
+            if (content.type === 'TV Show' && content.seasons) {
                 episodesTab.classList.remove('hidden');
                 seasonSelector.innerHTML = '';
-                movie.seasons.forEach(season => {
+                content.seasons.forEach(season => {
                     const option = document.createElement('option');
                     option.value = season.season;
                     option.textContent = `Season ${season.season}`;
                     seasonSelector.appendChild(option);
                 });
-                populateEpisodes(movie.seasons, seasonSelector.value);
-                seasonSelector.onchange = () => populateEpisodes(movie.seasons, seasonSelector.value);
+                populateEpisodes(content.seasons, seasonSelector.value);
+                seasonSelector.onchange = () => populateEpisodes(content.seasons, seasonSelector.value);
             } else {
                 episodesTab.classList.add('hidden');
             }
             
-            switchModalTab('details'); // Default to details tab
+            switchModalTab('details');
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         };
@@ -432,20 +587,20 @@
         modal.addEventListener('click', (e) => e.target === modal && closeModal());
 
         // --- DYNAMIC CONTENT RENDERING ---
-        const createMovieCard = (movie) => {
+        const createContentCard = (content) => {
             const item = document.createElement('div');
             item.className = 'carousel-item rounded-lg overflow-hidden cursor-pointer bg-theme-card';
-            item.dataset.movieId = movie.id;
+            item.dataset.contentId = content.id;
             const img = document.createElement('img');
-            img.src = movie.image;
-            img.alt = movie.title;
+            img.src = content.image;
+            img.alt = content.title;
             img.className = 'w-full h-auto';
             item.appendChild(img);
-            item.addEventListener('click', () => openModal(movie.id));
+            item.addEventListener('click', () => openModal(content.id));
             return item;
         };
 
-        const createCarousel = (title, movies) => {
+        const createCarousel = (title, contents) => {
             const section = document.createElement('div');
             section.className = 'carousel-section';
             const heading = document.createElement('h3');
@@ -456,8 +611,8 @@
             container.className = 'relative';
             const carousel = document.createElement('div');
             carousel.className = 'carousel-container flex overflow-x-auto space-x-4 pb-4';
-            movies.forEach(movie => {
-                const card = createMovieCard(movie);
+            contents.forEach(content => {
+                const card = createContentCard(content);
                 card.classList.add('flex-shrink-0', 'w-60', 'md:w-72');
                 carousel.appendChild(card);
             });
@@ -475,12 +630,13 @@
         };
         
         const setupHero = () => {
-            const heroMovie = movieData['new-releases'][0];
-            if(heroMovie) {
-                document.getElementById('heroImage').src = heroMovie.heroImage || heroMovie.image;
-                document.getElementById('heroTitle').textContent = heroMovie.title;
-                document.getElementById('heroDescription').textContent = heroMovie.description;
-                document.getElementById('heroMoreInfoBtn').addEventListener('click', () => openModal(heroMovie.id));
+            const heroContent = movieData['new-releases'][0];
+            if(heroContent) {
+                document.getElementById('heroImage').src = heroContent.heroImage || heroContent.image;
+                document.getElementById('heroTitle').textContent = heroContent.title;
+                document.getElementById('heroDescription').textContent = heroContent.description;
+                document.getElementById('heroMoreInfoBtn').addEventListener('click', () => openModal(heroContent.id));
+                document.getElementById('heroPlayBtn').addEventListener('click', () => playVideo(heroContent));
             }
         };
 
@@ -508,8 +664,8 @@
             const content = [...movieData['new-releases'], ...movieData.popular];
             const grid = document.getElementById('newAndPopularGrid');
             grid.innerHTML = '';
-            content.forEach(movie => {
-                const card = createMovieCard(movie);
+            content.forEach(item => {
+                const card = createContentCard(item);
                 grid.appendChild(card);
             });
         };
@@ -521,10 +677,10 @@
                 grid.innerHTML = `<p class="text-gray-400 col-span-full">Your list is empty. Add movies to see them here!</p>`;
                 return;
             }
-            myList.forEach(movieId => {
-                const movie = findMovieById(movieId);
-                if (movie) {
-                    const card = createMovieCard(movie);
+            myList.forEach(contentId => {
+                const content = findContentById(contentId);
+                if (content) {
+                    const card = createContentCard(content);
                     grid.appendChild(card);
                 }
             });
@@ -540,8 +696,8 @@
             document.getElementById('genreResultsTitle').textContent = `${genre}`;
             const grid = document.getElementById('genreResultsGrid');
             grid.innerHTML = '';
-            results.forEach(movie => {
-                const card = createMovieCard(movie);
+            results.forEach(item => {
+                const card = createContentCard(item);
                 grid.appendChild(card);
             });
             showPage('genreResultsPage');
@@ -550,12 +706,12 @@
         // --- SEARCH LOGIC ---
         const showSearchResults = (query) => {
             const allContent = Object.values(movieData).flat();
-            const results = allContent.filter(movie => movie.title.toLowerCase().includes(query.toLowerCase()));
+            const results = allContent.filter(content => content.title.toLowerCase().includes(query.toLowerCase()));
             const grid = document.getElementById('searchResultsGrid');
             grid.innerHTML = '';
             if (results.length > 0) {
-                results.forEach(movie => {
-                    const card = createMovieCard(movie);
+                results.forEach(content => {
+                    const card = createContentCard(content);
                     grid.appendChild(card);
                 });
             } else {
