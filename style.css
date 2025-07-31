@@ -1,46 +1,229 @@
+/* Fonts */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #111;
-  color: white;
   margin: 0;
-  padding: 0;
-  text-align: center;
+  background-color: var(--bg-color, #111);
+  color: var(--text-color, white);
+  transition: background-color 0.8s ease, color 0.8s ease;
 }
+
+h1, h2 {
+  font-family: 'Pacifico', cursive;
+  margin-bottom: 1em;
+}
+
+button {
+  background-color: #ff4da6;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0.3em;
+  transition: background-color 0.3s ease;
+}
+
+button:hover, .category-btn.active {
+  background-color: #ff79b0;
+}
+
+#intro-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #000;
+  color: #ff4da6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 1.5s ease;
+  font-family: 'Pacifico', cursive;
+}
+
+#intro-logo {
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5em;
+  animation: fadeInUp 2s ease forwards;
+}
+
+#intro-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeIn 3s 1.8s forwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+#main-nav {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  background-color: #222;
+  align-items: center;
+}
+
+.lang-switch button {
+  font-size: 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.lang-switch button:hover {
+  transform: scale(1.2);
+}
+
+#profile-toggle-btn {
+  margin-left: 20px;
+  background-color: #ff4da6;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
+}
+
+#profile-toggle-btn:hover {
+  background-color: #ff79b0;
+}
+
+#holiday-banner {
+  text-align: center;
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.3rem;
+  color: #ff4da6;
+  padding: 10px 0;
+  user-select: none;
+}
+
 .scene {
   display: none;
-  padding: 40px;
+  padding: 20px;
 }
+
 .scene.active {
   display: block;
 }
-.intro-img {
-  width: 100%;
-  max-height: 90vh;
-  object-fit: cover;
-  border-bottom: 5px solid #ff4da6;
+
+#profile-holder,
+#profile-editor,
+#main-content {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #222;
+  border-radius: 20px;
+  padding: 20px;
 }
-button {
-  margin-top: 20px;
-  padding: 10px 25px;
-  background: #ff4da6;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1rem;
+
+.avatars {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
 }
+
 .avatars img {
   width: 80px;
   border-radius: 50%;
-  margin: 10px;
+  margin: 0 10px;
   cursor: pointer;
   border: 3px solid transparent;
   transition: all 0.3s ease;
 }
+
 .avatars img.selected {
   border-color: #ff4da6;
   transform: scale(1.1);
 }
+
 .avatars img:hover {
   transform: scale(1.1) rotate(-2deg);
+}
+
+#category-nav {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#movies-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(140px,1fr));
+  gap: 15px;
+}
+
+.movie-card {
+  background-color: #333;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-card img {
+  width: 100%;
+  display: block;
+}
+
+.movie-info {
+  padding: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ff4da6;
+}
+
+.genre-separator {
+  grid-column: 1/-1;
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.2rem;
+  margin: 20px 0 10px 10px;
+  color: #ff79b0;
+}
+
+/* Holiday Themes */
+:root {
+  --bg-color: #111;
+  --text-color: white;
+}
+
+body.holiday-christmas {
+  --bg-color: #013220;
+  --text-color: #ffe6e6;
+}
+
+body.holiday-halloween {
+  --bg-color: #330000;
+  --text-color: #ffcc00;
+}
+
+body.holiday-newyear {
+  --bg-color: #000011;
+  --text-color: #ffeeff;
 }
