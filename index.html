@@ -1,53 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BaddieFlix - The Real Slayflix Experience</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Indie+Flower&family=Quicksand&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineStream - Monster High Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a202c; /* Default: Dark Slate */
+            --text-color: #e2e8f0; /* Default: Slate 200 */
+            --primary-color: #4fd1c5; /* Default: Teal */
+            --header-bg: #1a202c;
+            --card-bg: #2d3748; /* Default: Slate 700 */
+            --modal-bg: #252d3b;
+            --font-family: 'Nunito', sans-serif;
+        }
 
-  <!-- MAIN APP -->
-  <section id="app-screen" class="scene active">
-    <header>
-      <div id="logo-header">BaddieFlix</div>
-      <div id="profile-info">
-        <span id="welcome-text">Hey, Guest Queen! 👑</span>
-        <button id="reset-btn" title="Reset My List & Watched">♻️ Reset</button>
-      </div>
+        /* --- Seasonal Themes --- */
+        .season-winter {
+            --bg-color: #1A2A40; /* Deep Blue */
+            --text-color: #EAF0F6; /* Light Frost */
+            --primary-color: #87CEEB; /* Sky Blue */
+            --card-bg: #2F4562;
+            --modal-bg: #283A53;
+        }
+        .season-spring {
+            --bg-color: #2F4858; /* Cool Slate */
+            --text-color: #F0FFF4; /* Honeydew */
+            --primary-color: #98FB98; /* Pale Green */
+            --card-bg: #3E5A6D;
+            --modal-bg: #364E5F;
+        }
+        .season-summer {
+            --bg-color: #2c3e50; /* Midnight Blue */
+            --text-color: #ecf0f1; /* Clouds White */
+            --primary-color: #e74c3c; /* Alizarin Red */
+            --card-bg: #34495e; /* Wet Asphalt */
+            --modal-bg: #2f4052;
+        }
+        .season-autumn {
+            --bg-color: #4C3B4D; /* Dark Plum */
+            --text-color: #F5E6E8; /* Soft Pink */
+            --primary-color: #DDAF94; /* Muted Orange */
+            --card-bg: #6A5679;
+            --modal-bg: #5C4B68;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .hero-gradient {
+            background-image: linear-gradient(to top, var(--bg-color), rgba(20, 20, 20, 0) 50%);
+        }
+        .carousel-container::-webkit-scrollbar { display: none; }
+        .carousel-container { -ms-overflow-style: none; scrollbar-width: none; }
+        .carousel-item, .genre-card { transition: transform 0.3s ease-in-out, box-shadow 0.3s; }
+        .carousel-item:hover, .genre-card:hover { 
+            transform: scale(1.05); 
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        .modal-backdrop { background-color: rgba(0, 0, 0, 0.7); }
+        
+        /* Apply theme colors */
+        .bg-theme-header { background-color: var(--header-bg); }
+        .bg-theme-card { background-color: var(--card-bg); }
+        .bg-theme-modal { background-color: var(--modal-bg); }
+        .text-theme-primary { color: var(--primary-color); }
+        .border-theme-primary { border-color: var(--primary-color); }
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        .modal-tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        select {
+            background-color: var(--card-bg);
+        }
+    </style>
+</head>
+<body class="bg-black">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 md:px-16 py-4 flex justify-between items-center transition-colors duration-500 bg-transparent">
+        <div class="flex items-center space-x-8">
+            <h1 class="text-3xl font-bold text-theme-primary cursor-pointer" data-page="homePage">CineStream</h1>
+            <nav class="hidden md:flex items-center space-x-4">
+                <a href="#" class="nav-link" data-page="homePage">Home</a>
+                <a href="#" class="nav-link" data-page="genresPage" data-filter="TV Show">TV Shows</a>
+                <a href="#" class="nav-link" data-page="genresPage" data-filter="Movie">Movies</a>
+                <a href="#" class="nav-link" data-page="newAndPopularPage">New & Popular</a>
+                <a href="#" class="nav-link" data-page="myListPage">My List</a>
+            </nav>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="Search..." class="bg-black border border-white rounded-md px-3 py-1 focus:outline-none focus:border-theme-primary transition-all w-0 focus:w-48 md:focus:w-64 opacity-0 focus:opacity-100">
+                <svg id="searchIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer absolute top-1/2 right-2 transform -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <img src="https://placehold.co/32x32/4fd1c5/FFFFFF?text=U" class="rounded" alt="User Profile">
+        </div>
     </header>
 
-    <nav id="category-nav">
-      <button class="category-btn active" data-category="all">All</button>
-      <button class="category-btn" data-category="recent">Recent</button>
-      <button class="category-btn" data-category="mylist">My List</button>
-      <button class="category-btn" data-category="kids">Kids Side</button>
-    </nav>
+    <!-- Page Containers -->
+    <div id="pageContainer">
+        <!-- Home Page -->
+        <div id="homePage" class="page">
+            <!-- Hero Section -->
+            <main class="relative h-screen">
+                <div class="absolute inset-0">
+                    <img id="heroImage" src="" alt="Featured Show" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black opacity-50"></div>
+                    <div class="absolute inset-0 hero-gradient"></div>
+                </div>
+                <div class="relative z-10 flex flex-col justify-center h-full px-4 sm:px-8 md:px-16">
+                    <h2 id="heroTitle" class="text-4xl md:text-6xl font-bold max-w-xl"></h2>
+                    <p id="heroDescription" class="mt-4 max-w-xl text-lg"></p>
+                    <div class="mt-8 flex space-x-4">
+                        <button class="flex items-center bg-white text-black font-bold rounded px-6 py-2 hover:bg-gray-200 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M4 3.222v13.556c0 .414.464.695.84.465l11.16-6.778a.5.5 0 000-.93L4.84 2.757A.5.5 0 004 3.222z" /></svg>
+                            Play
+                        </button>
+                        <button id="heroMoreInfoBtn" class="flex items-center bg-gray-700 bg-opacity-70 font-bold rounded px-6 py-2 hover:bg-gray-600 transition">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            More Info
+                        </button>
+                    </div>
+                </div>
+            </main>
+            <!-- Content Carousels -->
+            <section id="carouselSection" class="px-4 sm:px-8 md:px-16 py-8 space-y-8 -mt-24 relative z-20"></section>
+        </div>
+        
+        <!-- Genres Page -->
+        <div id="genresPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
+            <h2 id="genresPageTitle" class="text-3xl font-bold mb-8">Browse by Genre</h2>
+            <div id="genresGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+        </div>
 
-    <main>
-      <h2 id="section-header">All Movies</h2>
-      <div id="movies-container"></div>
-    </main>
+        <!-- Genre Results Page -->
+        <div id="genreResultsPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
+            <h2 id="genreResultsTitle" class="text-3xl font-bold mb-8"></h2>
+            <div id="genreResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </div>
 
-    <!-- Movie Details Popup -->
-    <div id="movie-popup" class="hidden">
-      <div id="popup-content">
-        <button id="close-popup">✖</button>
-        <img id="popup-img" alt="Movie Cover" />
-        <h3 id="popup-title"></h3>
-        <p id="popup-description"></p>
-        <button id="add-mylist-btn">Add to My List</button>
-        <button id="mark-watched-btn">Mark as Watched</button>
-      </div>
+        <!-- New & Popular Page -->
+        <div id="newAndPopularPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
+            <h2 class="text-3xl font-bold mb-8">New & Popular</h2>
+            <div id="newAndPopularGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </div>
+
+        <!-- My List Page -->
+        <div id="myListPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
+            <h2 class="text-3xl font-bold mb-8">My List</h2>
+            <div id="myListGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </div>
+
+        <!-- Search Results Page -->
+        <div id="searchResultsPage" class="page hidden px-4 sm:px-8 md:px-16 py-24">
+            <h2 class="text-2xl font-bold mb-4">Search Results</h2>
+            <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </div>
+        
     </div>
-  </section>
 
-  <footer>
-    <p>&copy; 2025 SlayInterludeBaddies LLC. All rights reserved, babe 💖</p>
-  </footer>
 
-  <script src="script.js"></script>
+    <!-- Footer -->
+    <footer class="px-4 sm:px-8 md:px-16 py-8 mt-16 border-t border-gray-800">
+        <div class="max-w-5xl mx-auto text-gray-400">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <a href="#" class="hover:text-white">FAQ</a>
+                <a href="#" class="hover:text-white">Help Center</a>
+                <a href="#" class="hover:text-white">Account</a>
+                <a href="#" class="hover:text-white">Media Center</a>
+                <a href="#" class="hover:text-white">Investor Relations</a>
+                <a href="#" class="hover:text-white">Jobs</a>
+                <a href="#" class="hover:text-white">Ways to Watch</a>
+                <a href="#" class="hover:text-white">Terms of Use</a>
+                <a href="#" class="hover:text-white">Privacy</a>
+                <a href="#" class="hover:text-white">Cookie Preferences</a>
+                <a href="#" class="hover:text-white">Corporate Information</a>
+                <a href="#" class="hover:text-white">Contact Us</a>
+            </div>
+            <p class="text-sm mt-8">&copy; 2025 CineStream</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-backdrop flex items-center justify-center">
+        <div class="bg-theme-modal rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-3xl sm:w-full m-4">
+            <div class="relative">
+                <img id="modalImage" src="" class="w-full h-64 md:h-96 object-cover">
+                <button id="closeModal" class="absolute top-4 right-4 bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+                 <div class="absolute bottom-0 left-0 p-8">
+                    <h3 id="modalTitle" class="text-3xl font-bold text-white shadow-lg"></h3>
+                </div>
+            </div>
+            <div class="p-8">
+                <!-- Tabs -->
+                <div id="modalTabs" class="border-b border-gray-700">
+                    <nav class="flex space-x-8" aria-label="Tabs">
+                        <button id="detailsTab" class="modal-tab py-4 px-1 border-b-2 font-medium text-lg" data-tab="detailsContent">Details</button>
+                        <button id="episodesTab" class="modal-tab py-4 px-1 border-b-2 font-medium text-lg" data-tab="episodesContent">Seasons & Episodes</button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="detailsContent" class="py-6">
+                    <p id="modalDescription" class="text-gray-300"></p>
+                    <div class="mt-4 text-gray-400">
+                        <p><strong>Genre:</strong> <span id="modalGenre"></span></p>
+                        <p><strong>Rating:</strong> <span id="modalRating"></span></p>
+                        <p><strong>Type:</strong> <span id="modalType"></span></p>
+                    </div>
+                    <div class="mt-6">
+                        <button id="modalMyListBtn" class="w-full flex items-center justify-center bg-gray-700 bg-opacity-70 font-bold rounded px-6 py-3 hover:bg-gray-600 transition">
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="episodesContent" class="hidden py-6">
+                    <div class="mb-4">
+                        <label for="seasonSelector" class="sr-only">Select Season</label>
+                        <select id="seasonSelector" class="w-full p-2 rounded border-gray-600 focus:outline-none focus:ring-2 focus:ring-theme-primary"></select>
+                    </div>
+                    <div id="episodeList" class="space-y-4 max-h-64 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- MOCK DATA ---
+        const movieData = {
+            "new-releases": [
+                { id: 1, title: "Monster High: The Movie", type: "Movie", genre: "Musical Fantasy", rating: "6.1/10", description: "Frankie Stein starts at Monster High and must learn to navigate high school while hiding her human side, all while a threat to the school emerges.", image: "https://placehold.co/800x450/DE3163/FFFFFF?text=Monster+High:+The+Movie", heroImage: "https://placehold.co/1920x1080/DE3163/FFFFFF?text=Monster+High:+The+Movie" },
+                { id: 2, title: "Monster High 2", type: "Movie", genre: "Musical Fantasy", rating: "6.7/10", description: "Clawdeen Wolf, Draculaura, and Frankie Stein face new challenges, new students, and new powers as they navigate their sophomore year at Monster High.", image: "https://placehold.co/800x450/FF7F50/FFFFFF?text=Monster+High+2" },
+            ],
+            "popular": [
+                { id: 4, title: "Frights, Camera, Action!", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir to the vampire throne. She and her best ghoulfriends embark on a fangtastic adventure to Transylvania.", image: "https://placehold.co/800x450/9FE2BF/000000?text=Frights,+Camera,+Action!" },
+                { id: 5, title: "Boo York, Boo York", type: "Movie", genre: "Musical Animation", rating: "6.9/10", description: "The ghouls take a bite out of Boo York! When Cleo De Nile is invited to a gala celebrating a magical comet, she brings her friends for a monstrously fun time.", image: "https://placehold.co/800x450/40E0D0/FFFFFF?text=Boo+York,+Boo+York" },
+            ],
+             "tv-series": [
+                { id: 10, title: "Monster High", type: "TV Show", genre: "Animation", rating: "7.2/10", description: "The series follows Frankie Stein, Clawdeen Wolf and Draculaura as they navigate the hilarity of high school in the hallowed halls of Monster High.", image: "https://placehold.co/800x450/8A2BE2/FFFFFF?text=Monster+High+Series", 
+                  seasons: [
+                      { season: 1, episodes: [
+                          { episode: 1, title: "The Monstering", description: "It's the first day of school at Monster High! Clawdeen is nervous about her werewolf instincts, while Frankie tries to make new friends." },
+                          { episode: 2, title: "Food Fight", description: "Draculaura tries to convince the school to add vegetarian options to the menu, leading to a massive food fight." },
+                          { episode: 3, title: "Unlife's a Scream", description: "The ghouls plan a party, but things go haywire when Cleo's competitive nature takes over." },
+                      ]},
+                      { season: 2, episodes: [
+                          { episode: 1, title: "That's a Wrap", description: "Cleo directs the school play, but her vision clashes with everyone else's ideas." },
+                          { episode: 2, title: "The Ghoul Next Door", description: "A new student arrives, and the ghouls try to make him feel welcome, despite his shy nature." },
+                      ]}
+                  ]
+                },
+                { id: 11, title: "Adventures of the Ghoul Squad", type: "TV Show", genre: "Web Series", rating: "N/A", description: "Follow the adventures of Draculaura, Frankie, Clawdeen, Lagoona, and Cleo as they solve mysteries and help monsters in need.", image: "https://placehold.co/800x450/3CB371/FFFFFF?text=Ghoul+Squad",
+                  seasons: [
+                      { season: 1, episodes: [
+                          { episode: 1, title: "Calling All Ghouls", description: "The Ghoul Squad is formed to help a ghost find her lost voice." },
+                          { episode: 2, title: "The Case of the Missing Munch", description: "The cafeteria's famous spooky snacks are disappearing, and the squad is on the case." },
+                      ]}
+                  ]
+                },
+             ],
+             "classics": [
+                { id: 6, title: "Ghouls Rule!", type: "Movie", genre: "Animation", rating: "6.6/10", description: "Frankie Stein and her friends discover that ghouls and 'Normies' once had a great relationship. They set out to prove that the past doesn't have to define the future.", image: "https://placehold.co/800x450/CCCCFF/000000?text=Ghouls+Rule!" },
+                { id: 7, title: "Why Do Ghouls Fall in Love?", type: "Movie", genre: "Animation", rating: "7.1/10", description: "Draculaura's Sweet 1600th birthday is approaching, but her celebration is complicated by the arrival of two boys vying for her affection.", image: "https://placehold.co/800x450/DFFF00/000000?text=Why+Do+Ghouls+Fall+in+Love?" },
+                { id: 8, title: "Scaris: City of Frights", type: "Movie", genre: "Animation", rating: "6.7/10", description: "Clawdeen Wolf gets the chance to apprentice for the legendary fashion designer Madame Ghostier, and she and her friends pack their bags for Scaris, France.", image: "https://placehold.co/800x450/FFBF00/FFFFFF?text=Scaris:+City+of+Frights" },
+                { id: 9, title: "Haunted", type: "Movie", genre: "Animation", rating: "6.7/10", description: "When Spectra Vondergeist goes back to her old ghost school to find out why Monster High is being haunted, the other ghouls use Boogey Sand to become ghosts to follow her.", image: "https://placehold.co/800x450/FF00FF/FFFFFF?text=Haunted" },
+            ]
+        };
+
+        let myList = [];
+
+        // --- DOM ELEMENTS ---
+        const modal = document.getElementById('modal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const navLinks = document.querySelectorAll('.nav-link, h1[data-page]');
+        const pages = document.querySelectorAll('.page');
+        const detailsTab = document.getElementById('detailsTab');
+        const episodesTab = document.getElementById('episodesTab');
+        const detailsContent = document.getElementById('detailsContent');
+        const episodesContent = document.getElementById('episodesContent');
+        const seasonSelector = document.getElementById('seasonSelector');
+        const episodeList = document.getElementById('episodeList');
+
+        // --- PAGE NAVIGATION ---
+        const showPage = (pageId, filter = null) => {
+            pages.forEach(page => page.classList.add('hidden'));
+            const activePage = document.getElementById(pageId);
+            if (activePage) activePage.classList.remove('hidden');
+
+            if (pageId === 'genresPage') populateGenresPage(filter);
+            if (pageId === 'newAndPopularPage') populateNewAndPopularPage();
+            if (pageId === 'myListPage') populateMyListPage();
+
+            navLinks.forEach(link => {
+                const linkPage = link.dataset.page;
+                const linkFilter = link.dataset.filter;
+                const isFilterMatch = !linkFilter || linkFilter === filter;
+                link.classList.toggle('active', linkPage === pageId && isFilterMatch);
+            });
+            window.scrollTo(0, 0);
+        };
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage(link.dataset.page, link.dataset.filter || null);
+            });
+        });
+
+        // --- MY LIST LOGIC ---
+        const toggleMyList = (movieId) => {
+            const movieIndex = myList.indexOf(movieId);
+            if (movieIndex > -1) {
+                myList.splice(movieIndex, 1);
+            } else {
+                myList.push(movieId);
+            }
+            updateModalMyListButton(movieId);
+        };
+
+        const updateModalMyListButton = (movieId) => {
+            const btn = document.getElementById('modalMyListBtn');
+            const inList = myList.includes(movieId);
+            btn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    ${inList ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />' : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />'}
+                </svg>
+                <span>${inList ? 'Remove from My List' : 'Add to My List'}</span>
+            `;
+            btn.onclick = () => toggleMyList(movieId);
+        };
+
+        // --- HELPER FUNCTIONS ---
+        const findMovieById = (id) => {
+            for (const category in movieData) {
+                const movie = movieData[category].find(m => m.id === id);
+                if (movie) return movie;
+            }
+            return null;
+        };
+
+        // --- MODAL LOGIC ---
+        const switchModalTab = (tab) => {
+            if (tab === 'details') {
+                detailsTab.classList.add('active');
+                episodesTab.classList.remove('active');
+                detailsContent.classList.remove('hidden');
+                episodesContent.classList.add('hidden');
+            } else {
+                detailsTab.classList.remove('active');
+                episodesTab.classList.add('active');
+                detailsContent.classList.add('hidden');
+                episodesContent.classList.remove('hidden');
+            }
+        };
+
+        detailsTab.addEventListener('click', () => switchModalTab('details'));
+        episodesTab.addEventListener('click', () => switchModalTab('episodes'));
+
+        const populateEpisodes = (seasons, seasonNumber) => {
+            const season = seasons.find(s => s.season == seasonNumber);
+            episodeList.innerHTML = '';
+            if (season) {
+                season.episodes.forEach(ep => {
+                    const epElement = document.createElement('div');
+                    epElement.className = 'border-b border-gray-700 pb-2';
+                    epElement.innerHTML = `
+                        <h4 class="font-bold text-lg">${ep.episode}. ${ep.title}</h4>
+                        <p class="text-sm text-gray-400">${ep.description}</p>
+                    `;
+                    episodeList.appendChild(epElement);
+                });
+            }
+        };
+
+        const openModal = (movieId) => {
+            const movie = findMovieById(movieId);
+            if (!movie) return;
+            
+            // Populate general info
+            document.getElementById('modalImage').src = movie.image;
+            document.getElementById('modalTitle').textContent = movie.title;
+            document.getElementById('modalDescription').textContent = movie.description;
+            document.getElementById('modalGenre').textContent = movie.genre;
+            document.getElementById('modalRating').textContent = movie.rating;
+            document.getElementById('modalType').textContent = movie.type;
+            updateModalMyListButton(movie.id);
+
+            // Handle TV Show seasons
+            if (movie.type === 'TV Show' && movie.seasons) {
+                episodesTab.classList.remove('hidden');
+                seasonSelector.innerHTML = '';
+                movie.seasons.forEach(season => {
+                    const option = document.createElement('option');
+                    option.value = season.season;
+                    option.textContent = `Season ${season.season}`;
+                    seasonSelector.appendChild(option);
+                });
+                populateEpisodes(movie.seasons, seasonSelector.value);
+                seasonSelector.onchange = () => populateEpisodes(movie.seasons, seasonSelector.value);
+            } else {
+                episodesTab.classList.add('hidden');
+            }
+            
+            switchModalTab('details'); // Default to details tab
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        };
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => e.target === modal && closeModal());
+
+        // --- DYNAMIC CONTENT RENDERING ---
+        const createMovieCard = (movie) => {
+            const item = document.createElement('div');
+            item.className = 'carousel-item rounded-lg overflow-hidden cursor-pointer bg-theme-card';
+            item.dataset.movieId = movie.id;
+            const img = document.createElement('img');
+            img.src = movie.image;
+            img.alt = movie.title;
+            img.className = 'w-full h-auto';
+            item.appendChild(img);
+            item.addEventListener('click', () => openModal(movie.id));
+            return item;
+        };
+
+        const createCarousel = (title, movies) => {
+            const section = document.createElement('div');
+            section.className = 'carousel-section';
+            const heading = document.createElement('h3');
+            heading.className = 'text-2xl font-bold mb-4';
+            heading.textContent = title;
+            section.appendChild(heading);
+            const container = document.createElement('div');
+            container.className = 'relative';
+            const carousel = document.createElement('div');
+            carousel.className = 'carousel-container flex overflow-x-auto space-x-4 pb-4';
+            movies.forEach(movie => {
+                const card = createMovieCard(movie);
+                card.classList.add('flex-shrink-0', 'w-60', 'md:w-72');
+                carousel.appendChild(card);
+            });
+            container.appendChild(carousel);
+            section.appendChild(container);
+            carouselSection.appendChild(section);
+        };
+
+        const populateCarousels = () => {
+            carouselSection.innerHTML = '';
+            createCarousel('New Releases', movieData['new-releases']);
+            createCarousel('Popular Ghouls', movieData.popular);
+            createCarousel('Fangtastic TV Series', movieData['tv-series']);
+            createCarousel('Fangtastic Classics', movieData.classics);
+        };
+        
+        const setupHero = () => {
+            const heroMovie = movieData['new-releases'][0];
+            if(heroMovie) {
+                document.getElementById('heroImage').src = heroMovie.heroImage || heroMovie.image;
+                document.getElementById('heroTitle').textContent = heroMovie.title;
+                document.getElementById('heroDescription').textContent = heroMovie.description;
+                document.getElementById('heroMoreInfoBtn').addEventListener('click', () => openModal(heroMovie.id));
+            }
+        };
+
+        const populateGenresPage = (filter) => {
+            const allContent = Object.values(movieData).flat();
+            const filteredContent = filter ? allContent.filter(item => item.type === filter) : allContent;
+            const genres = [...new Set(filteredContent.map(item => item.genre))];
+            
+            document.getElementById('genresPageTitle').textContent = filter ? `Browse ${filter}s by Genre` : 'Browse All Genres';
+            document.getElementById('genresGrid').innerHTML = '';
+
+            genres.forEach(genre => {
+                const card = document.createElement('div');
+                card.className = 'genre-card h-40 rounded-lg bg-theme-card flex items-center justify-center cursor-pointer';
+                card.addEventListener('click', () => showGenreResults(genre, filter));
+                const title = document.createElement('h4');
+                title.className = 'text-2xl font-bold text-center p-2';
+                title.textContent = genre;
+                card.appendChild(title);
+                document.getElementById('genresGrid').appendChild(card);
+            });
+        };
+        
+        const populateNewAndPopularPage = () => {
+            const content = [...movieData['new-releases'], ...movieData.popular];
+            const grid = document.getElementById('newAndPopularGrid');
+            grid.innerHTML = '';
+            content.forEach(movie => {
+                const card = createMovieCard(movie);
+                grid.appendChild(card);
+            });
+        };
+
+        const populateMyListPage = () => {
+            const grid = document.getElementById('myListGrid');
+            grid.innerHTML = '';
+            if (myList.length === 0) {
+                grid.innerHTML = `<p class="text-gray-400 col-span-full">Your list is empty. Add movies to see them here!</p>`;
+                return;
+            }
+            myList.forEach(movieId => {
+                const movie = findMovieById(movieId);
+                if (movie) {
+                    const card = createMovieCard(movie);
+                    grid.appendChild(card);
+                }
+            });
+        };
+
+        const showGenreResults = (genre, typeFilter) => {
+            const allContent = Object.values(movieData).flat();
+            let results = allContent.filter(item => item.genre === genre);
+            if (typeFilter) {
+                results = results.filter(item => item.type === typeFilter);
+            }
+            
+            document.getElementById('genreResultsTitle').textContent = `${genre}`;
+            const grid = document.getElementById('genreResultsGrid');
+            grid.innerHTML = '';
+            results.forEach(movie => {
+                const card = createMovieCard(movie);
+                grid.appendChild(card);
+            });
+            showPage('genreResultsPage');
+        };
+
+        // --- SEARCH LOGIC ---
+        const showSearchResults = (query) => {
+            const allContent = Object.values(movieData).flat();
+            const results = allContent.filter(movie => movie.title.toLowerCase().includes(query.toLowerCase()));
+            const grid = document.getElementById('searchResultsGrid');
+            grid.innerHTML = '';
+            if (results.length > 0) {
+                results.forEach(movie => {
+                    const card = createMovieCard(movie);
+                    grid.appendChild(card);
+                });
+            } else {
+                grid.innerHTML = '<p class="text-gray-400 col-span-full">No results found.</p>';
+            }
+            showPage('searchResultsPage');
+        };
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            if (query.length > 1) {
+                showSearchResults(query);
+            } else if (query.length === 0) {
+                showPage('homePage');
+            }
+        });
+        
+        document.getElementById('searchIcon').addEventListener('click', () => {
+            searchInput.classList.toggle('w-0');
+            searchInput.classList.toggle('w-48');
+            searchInput.classList.toggle('md:w-64');
+            searchInput.classList.toggle('opacity-0');
+            searchInput.focus();
+        });
+
+        // --- SCROLL BEHAVIOR ---
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-theme-header');
+            } else {
+                header.classList.remove('bg-theme-header');
+            }
+        });
+
+        // --- SEASONAL THEME LOGIC ---
+        const applySeasonalTheme = () => {
+            const month = new Date().getMonth();
+            let season = 'winter';
+            if (month >= 2 && month <= 4) season = 'spring';
+            else if (month >= 5 && month <= 7) season = 'summer';
+            else if (month >= 8 && month <= 10) season = 'autumn';
+            document.body.classList.add(`season-${season}`);
+        };
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            applySeasonalTheme();
+            setupHero();
+            populateCarousels();
+            showPage('homePage'); // Set initial page
+        });
+    </script>
 </body>
 </html>
