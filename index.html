@@ -3,55 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineStream - Monster High Edition</title>
+    <title>CineStream - MLP & MH Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #1a202c; /* Default: Dark Slate */
-            --text-color: #e2e8f0; /* Default: Slate 200 */
-            --primary-color: #4fd1c5; /* Default: Teal */
-            --header-bg: #1a202c;
-            --card-bg: #2d3748; /* Default: Slate 700 */
-            --modal-bg: #252d3b;
+            --bg-color: #141414;
+            --text-color: #ffffff;
+            --primary-color: #E50914; /* Netflix Red */
+            --header-bg: #141414;
+            --card-bg: #2d3748;
+            --modal-bg: #181818;
             --font-family: 'Nunito', sans-serif;
-        }
-
-        /* --- Seasonal Themes --- */
-        .season-winter {
-            --bg-color: #1A2A40; /* Deep Blue */
-            --text-color: #EAF0F6; /* Light Frost */
-            --primary-color: #87CEEB; /* Sky Blue */
-            --card-bg: #2F4562;
-            --modal-bg: #283A53;
-        }
-        .season-spring {
-            --bg-color: #2F4858; /* Cool Slate */
-            --text-color: #F0FFF4; /* Honeydew */
-            --primary-color: #98FB98; /* Pale Green */
-            --card-bg: #3E5A6D;
-            --modal-bg: #364E5F;
-        }
-        .season-summer {
-            --bg-color: #2c3e50; /* Midnight Blue */
-            --text-color: #ecf0f1; /* Clouds White */
-            --primary-color: #e74c3c; /* Alizarin Red */
-            --card-bg: #34495e; /* Wet Asphalt */
-            --modal-bg: #2f4052;
-        }
-        .season-autumn {
-            --bg-color: #4C3B4D; /* Dark Plum */
-            --text-color: #F5E6E8; /* Soft Pink */
-            --primary-color: #DDAF94; /* Muted Orange */
-            --card-bg: #6A5679;
-            --modal-bg: #5C4B68;
         }
 
         body {
             font-family: var(--font-family);
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: background-color 0.5s, color 0.5s;
         }
         .hero-gradient {
             background-image: linear-gradient(to top, var(--bg-color), rgba(20, 20, 20, 0) 50%);
@@ -83,14 +52,6 @@
         select {
             background-color: var(--card-bg);
         }
-        /* Custom Player Styles */
-        .player-controls {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        #playerPage:hover .player-controls {
-            opacity: 1;
-        }
     </style>
 </head>
 <body class="bg-black">
@@ -114,7 +75,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
-            <img src="https://placehold.co/32x32/4fd1c5/FFFFFF?text=U" class="rounded" alt="User Profile">
+            <img src="https://placehold.co/32x32/E50914/FFFFFF?text=U" class="rounded" alt="User Profile">
         </div>
     </header>
 
@@ -170,35 +131,6 @@
             <div id="searchResultsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
         </div>
     </div>
-    
-    <!-- Video Player Page -->
-    <div id="playerPage" class="hidden fixed inset-0 bg-black z-[100] flex items-center justify-center">
-        <video id="videoPlayer" class="w-full h-full"></video>
-        <!-- Custom Controls -->
-        <div class="player-controls absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-            <input type="range" id="progressBar" class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer" value="0" step="0.1">
-            <div class="flex items-center justify-between mt-2 text-white">
-                <div class="flex items-center space-x-4">
-                    <button id="playPauseBtn"></button>
-                    <div id="timeDisplay">00:00 / 00:00</div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button id="subtitleBtn" class="hidden">CC</button>
-                    <button id="fullscreenBtn">FS</button>
-                </div>
-            </div>
-        </div>
-        <!-- Back Button -->
-        <button id="closePlayerBtn" class="absolute top-5 right-5 text-white text-4xl z-10">&times;</button>
-        <!-- Subtitle Menu -->
-        <div id="subtitleMenu" class="hidden absolute bottom-16 right-20 bg-black/80 rounded p-2"></div>
-        <!-- Player Error Message -->
-        <div id="playerError" class="hidden absolute text-white text-center bg-red-800 p-4 rounded z-20">
-            <h3 class="font-bold text-xl">Video Error</h3>
-            <p>Could not load video. Please ensure the file exists and the path is correct.</p>
-        </div>
-    </div>
-
 
     <!-- Footer -->
     <footer id="mainFooter" class="px-4 sm:px-8 md:px-16 py-8 mt-16 border-t border-gray-800">
@@ -275,33 +207,31 @@
 
     <script>
         // --- MOCK DATA ---
-        // IMPORTANT: The 'videoSrc' and 'subtitles.src' paths must match your file structure in GitHub.
-        // Example: 'videos/monster_high_the_movie.mp4'
         const movieData = {
-            "new-releases": [
-                { id: 1, title: "Monster High: The Movie", type: "Movie", genre: "Musical Fantasy", rating: "6.1/10", description: "Frankie Stein starts at Monster High...", image: "https://placehold.co/800x450/DE3163/FFFFFF?text=Monster+High:+The+Movie", heroImage: "https://placehold.co/1920x1080/DE3163/FFFFFF?text=Monster+High:+The+Movie", videoSrc: "videos/monster_high_the_movie.mp4", 
-                  subtitles: [
-                      { lang: 'en', label: 'English', src: 'videos/subs/mh_movie_en.vtt' },
-                      { lang: 'es', label: 'Español', src: 'videos/subs/mh_movie_es.vtt' }
-                  ]
-                },
+            "monster-high": [
+                { id: 101, title: "Monster High: New Ghoul at School", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "As the new ghoul in school, Frankie Stein is a bit of a social outcast. But when she's framed for a crime she didn't commit, she must team up with her new friends to clear her name.", image: "https://m.media-amazon.com/images/M/MV5BMTY5OTg4OTcxMl5BMl5BanBnXkFtZTcwNDExNDc1NQ@@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt1789846" },
+                { id: 102, title: "Monster High: Fright On!", type: "Movie", genre: "Animation, Family", rating: "6.9/10", description: "The historic rivalry between werewolves and vampires threatens to disrupt the peace at Monster High, and it's up to Frankie and her friends to bring everyone together.", image: "https://m.media-amazon.com/images/M/MV5BMjA0NTc4ODkyNF5BMl5BanBnXkFtZTgwMjc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2615666" },
+                { id: 103, title: "Monster High: Why Do Ghouls Fall in Love?", type: "Movie", genre: "Animation, Family", rating: "7.1/10", description: "Draculaura's Sweet 1600th birthday takes a chaotic turn when two old flames, Clawd and Valentine, return to vie for her affection.", image: "https://m.media-amazon.com/images/M/MV5BMTQxMjM0ODU5NV5BMl5BanBnXkFtZTcwMTM3NjY2Nw@@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2168938" },
+                { id: 104, title: "Monster High: Escape from Skull Shores", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "After being shipwrecked on a mysterious island, the ghouls must survive the wild jungle and a mysterious Beast who isn't what he seems.", image: "https://m.media-amazon.com/images/M/MV5BMTU3MTc5NjE1OF5BMl5BanBnXkFtZTcwODg0Mzg2Nw@@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2395337" },
+                { id: 105, title: "Monster High: Friday Night Frights", type: "Movie", genre: "Animation, Family", rating: "7.0/10", description: "After the boys are injured, Frankie convinces her friends to join the Skultimate Roller Maze Championships to take back the school's crest.", image: "https://m.media-amazon.com/images/M/MV5BMTc5MjA3MjQ4Nl5BMl5BanBnXkFtZTgwNzk1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2650548" },
+                { id: 106, title: "Monster High: Ghouls Rule", type: "Movie", genre: "Animation, Family", rating: "6.6/10", description: "Frankie and her friends learn about the old conflict between 'Normies' and monsters and decide it's time to celebrate their unique differences.", image: "https://m.media-amazon.com/images/M/MV5BMTg0NjE1MTY0OF5BMl5BanBnXkFtZTcwNjA0Mzg2Nw@@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2446108" },
+                { id: 107, title: "Monster High: Scaris: City of Frights", type: "Movie", genre: "Animation, Family", rating: "6.7/10", description: "Clawdeen Wolf travels to Scaris to compete for a chance to apprentice with the legendary fashion designer, Madame Ghostier.", image: "https://m.media-amazon.com/images/M/MV5BMTI0MzA2ODc5MV5BMl5BanBnXkFtZTcwNzQ4Mzg2Nw@@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3611432" },
+                { id: 108, title: "Monster High: 13 Wishes", type: "Movie", genre: "Animation, Fantasy", rating: "6.8/10", description: "Howleen Wolf discovers an ancient genie lantern and is granted 13 wishes, but soon learns that each wish comes with a dark side.", image: "https://m.media-amazon.com/images/M/MV5BMTY3OTc0OTI0NV5BMl5BanBnXkFtZTgwMDc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3159812" },
+                { id: 109, title: "Monster High: Frights, Camera, Action!", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir to the Vampire Throne and travels to Transylvania for a royal coronation.", image: "https://m.media-amazon.com/images/M/MV5BMTk2NzU0NzA1OV5BMl5BanBnXkFtZTgwNjc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3565904" },
+                { id: 110, title: "Monster High: Freaky Fusion", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "While trying to help Frankie learn about her past, the ghouls travel back in time and accidentally fuse some of their bodies together.", image: "https://m.media-amazon.com/images/M/MV5BMTk5NjkyOTc2M15BMl5BanBnXkFtZTgwOjc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3824344" },
+                { id: 111, title: "Monster High: Haunted", type: "Movie", genre: "Animation, Family", rating: "6.7/10", description: "The ghouls become ghosts to follow Spectra Vondergeist and discover why Monster High is being haunted.", image: "https://m.media-amazon.com/images/M/MV5BMjA3MjM5MzU5NV5BMl5BanBnXkFtZTgwMjc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4137924" },
+                { id: 112, title: "Monster High: Boo York, Boo York", type: "Movie", genre: "Animation, Musical", rating: "6.9/10", description: "The ghouls travel to Boo York to attend a gala celebrating a magical comet, where they get caught up in monster politics and musical numbers.", image: "https://m.media-amazon.com/images/M/MV5BMjI2MzM1NDQzN15BMl5BanBnXkFtZTgwMjc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4779496" },
+                { id: 113, title: "Monster High: Great Scarrier Reef", type: "Movie", genre: "Animation, Family", rating: "6.6/10", description: "When the ghouls are pulled into the school pool, they're transported to the Great Scarrier Reef, where Lagoona must confront her past.", image: "https://m.media-amazon.com/images/M/MV5BMTk1NzU3MTU1N15BMl5BanBnXkFtZTgwOjc1NDg2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt5475710" },
             ],
-            "popular": [
-                { id: 4, title: "Frights, Camera, Action!", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir...", image: "https://placehold.co/800x450/9FE2BF/000000?text=Frights,+Camera,+Action!", videoSrc: "videos/frights_camera_action.mp4" },
-            ],
-             "tv-series": [
-                { id: 10, title: "Monster High", type: "TV Show", genre: "Animation", rating: "7.2/10", description: "The series follows Frankie Stein, Clawdeen Wolf and Draculaura...", image: "https://placehold.co/800x450/8A2BE2/FFFFFF?text=Monster+High+Series", 
-                  seasons: [
-                      { season: 1, episodes: [
-                          { episode: 1, title: "The Monstering", description: "It's the first day of school at Monster High!...", videoSrc: "videos/mh_s01e01.mp4", subtitles: [{ lang: 'en', label: 'English', src: 'videos/subs/mh_s01e01_en.vtt' }] },
-                          { episode: 2, title: "Food Fight", description: "Draculaura tries to convince the school...", videoSrc: "videos/mh_s01e02.mp4" },
-                      ]},
-                  ]
-                },
-             ],
-             "classics": [
-                { id: 6, title: "Ghouls Rule!", type: "Movie", genre: "Animation", rating: "6.6/10", description: "Frankie Stein and her friends discover that ghouls and 'Normies'...", image: "https://placehold.co/800x450/CCCCFF/000000?text=Ghouls+Rule!", videoSrc: "videos/ghouls_rule.mp4" },
-             ]
+            "my-little-pony": [
+                { id: 201, title: "My Little Pony: Equestria Girls", type: "Movie", genre: "Animation, Comedy", rating: "6.2/10", description: "Via a magic mirror, Twilight Sparkle travels into an alternate universe in order to recover a crown that was stolen from the Crystal Empire.", image: "https://m.media-amazon.com/images/M/MV5BODRlYjE3OTMtYjhmMi00ZDE1LWIzYjQtN2ViN2FjOTQ5MDkyXkEyXkFqcGdeQXVyNDgyODgxNjE@._V1_.jpg", heroImage: "https://m.media-amazon.com/images/M/MV5BMjE0MTM3OTM1OF5BMl5BanBnXkFtZTcwNTAyODg4OQ@@._V1_FMjpg_UX1000_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2908228" },
+                { id: 202, title: "My Little Pony: Equestria Girls - Rainbow Rocks", type: "Movie", genre: "Animation, Comedy", rating: "7.1/10", description: "Canterlot High is hosting a musical showcase, and Rainbow Dash, Applejack, Pinkie Pie, Rarity, and Fluttershy are going to be performing with their new band, The Rainbooms.", image: "https://m.media-amazon.com/images/M/MV5BMTk1NDA3NTQyN15BMl5BanBnXkFtZTgwNDc2NTE2MjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3529198" },
+                { id: 203, title: "My Little Pony: Equestria Girls - Friendship Games", type: "Movie", genre: "Animation, Comedy", rating: "6.9/10", description: "Canterlot High meets its rival school, Crystal Prep Academy, in a competition that's a long-standing tradition: the Friendship Games.", image: "https://m.media-amazon.com/images/M/MV5BMjEzNTg3OTM1Nl5BMl5BanBnXkFtZTgwNTA0MDI3NjE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4450396" },
+                { id: 204, title: "My Little Pony: Equestria Girls - Legend of Everfree", type: "Movie", genre: "Animation, Comedy", rating: "6.7/10", description: "The students of Canterlot High School go on a trip to Camp Everfree, where they discover a mysterious magical force from the forest.", image: "https://m.media-amazon.com/images/M/MV5BMTQ2ODc0MTY5Nl5BMl5BanBnXkFtZTgwMTM5Mjg1OTE@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt5474644" },
+                { id: 205, title: "My Little Pony: Rollercoaster of Friendship", type: "Movie", genre: "Animation, Short", rating: "6.8/10", description: "Rarity's summer job at the new Equestria Land theme park is threatened by the social media savvy Vignette Valencia.", image: "https://m.media-amazon.com/images/M/MV5BNjYxZDUwY2ItZDBiNC00YjI5LTg2MDItZDA2MmU5YjYyM2YwXkEyXkFqcGdeQXVyNTM3MDMyMDQ@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt7869818" },
+                { id: 206, title: "My Little Pony: Forgotten Friendship", type: "Movie", genre: "Animation, Family", rating: "7.5/10", description: "Sunset Shimmer discovers that her friends' good memories of her have been erased, and she must find the culprit and restore their friendship.", image: "https://m.media-amazon.com/images/M/MV5BMjMwMjE1MTQ1OV5BMl5BanBnXkFtZTgwMjc0MzczNTM@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt8717590" },
+                { id: 207, title: "My Little Pony: Spring Breakdown", type: "Movie", genre: "Animation, Short", rating: "6.9/10", description: "The girls take a cruise for spring break, but their trip takes a magical turn when Rainbow Dash's obsession with fighting evil leads them to a strange island.", image: "https://m.media-amazon.com/images/M/MV5BNjYxZDUwY2ItZDBiNC00YjI5LTg2MDItZDA2MmU5YjYyM2YwXkEyXkFqcGdeQXVyNTM3MDMyMDQ@._V1_.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt8734872" },
+            ]
         };
 
         let myList = [];
@@ -313,13 +243,6 @@
         const playerPage = document.getElementById('playerPage');
         const videoPlayer = document.getElementById('videoPlayer');
         const closePlayerBtn = document.getElementById('closePlayerBtn');
-        const playerError = document.getElementById('playerError');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const progressBar = document.getElementById('progressBar');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const subtitleBtn = document.getElementById('subtitleBtn');
-        const subtitleMenu = document.getElementById('subtitleMenu');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
         
         const modal = document.getElementById('modal');
         const closeModalBtn = document.getElementById('closeModal');
@@ -334,124 +257,12 @@
 
         // --- PLAYER LOGIC ---
         const playVideo = (content) => {
-            if (!content || !content.videoSrc) {
+            if (!content || !content.embedSrc) {
                 console.error("No video source provided.");
                 return;
             }
-            playerError.classList.add('hidden');
-            mainHeader.classList.add('hidden');
-            pageContainer.classList.add('hidden');
-            mainFooter.classList.add('hidden');
-            playerPage.classList.remove('hidden');
-            
-            videoPlayer.innerHTML = ''; // Clear old tracks
-            if (content.subtitles) {
-                content.subtitles.forEach(sub => {
-                    const track = document.createElement('track');
-                    track.kind = 'subtitles';
-                    track.label = sub.label;
-                    track.srclang = sub.lang;
-                    track.src = sub.src;
-                    videoPlayer.appendChild(track);
-                });
-            }
-
-            videoPlayer.src = content.videoSrc;
-            videoPlayer.play();
-            closeModal();
-            setupSubtitleMenu();
+            window.open(content.embedSrc, '_blank');
         };
-
-        const closePlayer = () => {
-            mainHeader.classList.remove('hidden');
-            pageContainer.classList.remove('hidden');
-            mainFooter.classList.remove('hidden');
-            playerPage.classList.add('hidden');
-            videoPlayer.pause();
-            videoPlayer.src = "";
-        };
-        closePlayerBtn.addEventListener('click', closePlayer);
-
-        videoPlayer.addEventListener('error', () => {
-            console.error("Error loading video:", videoPlayer.src);
-            console.error("Please ensure the video file exists at the specified path and the server can serve it.");
-            playerError.classList.remove('hidden');
-            setTimeout(() => {
-                playerError.classList.add('hidden');
-                closePlayer();
-            }, 5000);
-        });
-
-        const togglePlay = () => {
-            if (videoPlayer.paused) {
-                videoPlayer.play();
-            } else {
-                videoPlayer.pause();
-            }
-        };
-        playPauseBtn.addEventListener('click', togglePlay);
-        videoPlayer.addEventListener('play', () => playPauseBtn.innerHTML = '❚❚');
-        videoPlayer.addEventListener('pause', () => playPauseBtn.innerHTML = '▶');
-
-        const formatTime = (time) => {
-            const minutes = Math.floor(time / 60);
-            const seconds = Math.floor(time % 60);
-            return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        };
-
-        videoPlayer.addEventListener('timeupdate', () => {
-            progressBar.value = (videoPlayer.currentTime / videoPlayer.duration) * 100;
-            timeDisplay.textContent = `${formatTime(videoPlayer.currentTime)} / ${formatTime(videoPlayer.duration || 0)}`;
-        });
-
-        progressBar.addEventListener('input', () => {
-            videoPlayer.currentTime = (progressBar.value / 100) * videoPlayer.duration;
-        });
-
-        const setupSubtitleMenu = () => {
-            subtitleMenu.innerHTML = '';
-            const tracks = videoPlayer.textTracks;
-            if (tracks.length === 0) {
-                subtitleBtn.classList.add('hidden');
-                return;
-            }
-            subtitleBtn.classList.remove('hidden');
-
-            const offBtn = document.createElement('button');
-            offBtn.textContent = 'Off';
-            offBtn.className = 'block w-full text-left p-1 hover:bg-gray-700';
-            offBtn.onclick = () => {
-                for(let i = 0; i < tracks.length; i++) tracks[i].mode = 'hidden';
-                subtitleMenu.classList.add('hidden');
-            };
-            subtitleMenu.appendChild(offBtn);
-
-            for(let i = 0; i < tracks.length; i++) {
-                const track = tracks[i];
-                const btn = document.createElement('button');
-                btn.textContent = track.label;
-                btn.className = 'block w-full text-left p-1 hover:bg-gray-700';
-                btn.onclick = () => {
-                    for(let j = 0; j < tracks.length; j++) tracks[j].mode = 'hidden';
-                    track.mode = 'showing';
-                    subtitleMenu.classList.add('hidden');
-                };
-                subtitleMenu.appendChild(btn);
-            }
-        };
-
-        subtitleBtn.addEventListener('click', () => {
-            subtitleMenu.classList.toggle('hidden');
-        });
-        
-        fullscreenBtn.addEventListener('click', () => {
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            } else {
-                playerPage.requestFullscreen();
-            }
-        });
-
 
         // --- PAGE NAVIGATION ---
         const showPage = (pageId, filter = null) => {
@@ -549,7 +360,10 @@
             const content = findContentById(contentId);
             if (!content) return;
             
-            document.getElementById('modalImage').src = content.image;
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = content.image;
+            modalImage.onerror = () => { modalImage.src = `https://placehold.co/800x450/141414/E50914?text=${content.title.replace(/\s/g, '+')}`};
+
             document.getElementById('modalTitle').textContent = content.title;
             document.getElementById('modalDescription').textContent = content.description;
             document.getElementById('modalGenre').textContent = content.genre;
@@ -595,6 +409,7 @@
             img.src = content.image;
             img.alt = content.title;
             img.className = 'w-full h-auto';
+            img.onerror = () => { img.src = `https://placehold.co/800x450/141414/E50914?text=${content.title.replace(/\s/g, '+')}`};
             item.appendChild(img);
             item.addEventListener('click', () => openModal(content.id));
             return item;
@@ -623,16 +438,17 @@
 
         const populateCarousels = () => {
             carouselSection.innerHTML = '';
-            createCarousel('New Releases', movieData['new-releases']);
-            createCarousel('Popular Ghouls', movieData.popular);
-            createCarousel('Fangtastic TV Series', movieData['tv-series']);
-            createCarousel('Fangtastic Classics', movieData.classics);
+            createCarousel('My Little Pony: Equestria Girls', movieData['my-little-pony']);
+            createCarousel('Monster High', movieData['monster-high']);
         };
         
         const setupHero = () => {
-            const heroContent = movieData['new-releases'][0];
+            const heroContent = movieData['my-little-pony'][0];
             if(heroContent) {
-                document.getElementById('heroImage').src = heroContent.heroImage || heroContent.image;
+                const heroImage = document.getElementById('heroImage');
+                heroImage.src = heroContent.heroImage || heroContent.image;
+                heroImage.onerror = () => { heroImage.src = `https://placehold.co/1920x1080/141414/E50914?text=${heroContent.title.replace(/\s/g, '+')}`};
+
                 document.getElementById('heroTitle').textContent = heroContent.title;
                 document.getElementById('heroDescription').textContent = heroContent.description;
                 document.getElementById('heroMoreInfoBtn').addEventListener('click', () => openModal(heroContent.id));
@@ -661,7 +477,7 @@
         };
         
         const populateNewAndPopularPage = () => {
-            const content = [...movieData['new-releases'], ...movieData.popular];
+            const content = [...movieData['monster-high'].slice(0,6), ...movieData['my-little-pony'].slice(0,6)];
             const grid = document.getElementById('newAndPopularGrid');
             grid.innerHTML = '';
             content.forEach(item => {
@@ -748,19 +564,8 @@
             }
         });
 
-        // --- SEASONAL THEME LOGIC ---
-        const applySeasonalTheme = () => {
-            const month = new Date().getMonth();
-            let season = 'winter';
-            if (month >= 2 && month <= 4) season = 'spring';
-            else if (month >= 5 && month <= 7) season = 'summer';
-            else if (month >= 8 && month <= 10) season = 'autumn';
-            document.body.classList.add(`season-${season}`);
-        };
-
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            applySeasonalTheme();
             setupHero();
             populateCarousels();
             showPage('homePage'); // Set initial page
