@@ -52,11 +52,6 @@
         select {
             background-color: var(--card-bg);
         }
-        #playerPage iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
-        }
         /* Carousel Arrow Styles */
         .carousel-arrow {
             opacity: 0;
@@ -64,6 +59,11 @@
         }
         .carousel-section:hover .carousel-arrow {
             opacity: 1;
+        }
+        #playerPage iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
         }
     </style>
 </head>
@@ -220,6 +220,11 @@
                     </div>
                     <div id="episodeList" class="space-y-4 max-h-64 overflow-y-auto"></div>
                 </div>
+                 <!-- Recommendations Section -->
+                <div id="recommendationsSection" class="pt-6 border-t border-gray-700">
+                     <h4 class="text-xl font-bold mb-4">You Might Also Like</h4>
+                     <div id="recommendationsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -229,28 +234,33 @@
         // --- MOCK DATA ---
         const movieData = {
             "monster-high": [
-                { id: 101, title: "Monster High: New Ghoul at School", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "As the new ghoul in school, Frankie Stein is a bit of a social outcast. But when she's framed for a crime she didn't commit, she must team up with her new friends to clear her name.", image: "images/new_ghoul_at_school.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt1789846" },
-                { id: 102, title: "Monster High: Fright On!", type: "Movie", genre: "Animation, Family", rating: "6.9/10", description: "The historic rivalry between werewolves and vampires threatens to disrupt the peace at Monster High, and it's up to Frankie and her friends to bring everyone together.", image: "images/fright_on.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2615666" },
-                { id: 103, title: "Monster High: Why Do Ghouls Fall in Love?", type: "Movie", genre: "Animation, Family", rating: "7.1/10", description: "Draculaura's Sweet 1600th birthday takes a chaotic turn when two old flames, Clawd and Valentine, return to vie for her affection.", image: "images/why_do_ghouls_fall_in_love.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2168938" },
-                { id: 104, title: "Monster High: Escape from Skull Shores", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "After being shipwrecked on a mysterious island, the ghouls must survive the wild jungle and a mysterious Beast who isn't what he seems.", image: "images/escape_from_skull_shores.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2395337" },
-                { id: 105, title: "Monster High: Friday Night Frights", type: "Movie", genre: "Animation, Family", rating: "7.0/10", description: "After the boys are injured, Frankie convinces her friends to join the Skultimate Roller Maze Championships to take back the school's crest.", image: "images/friday_night_frights.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2650548" },
-                { id: 106, title: "Monster High: Ghouls Rule", type: "Movie", genre: "Animation, Family", rating: "6.6/10", description: "Frankie and her friends learn about the old conflict between 'Normies' and monsters and decide it's time to celebrate their unique differences.", image: "images/ghouls_rule.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2446108" },
-                { id: 107, title: "Monster High: Scaris: City of Frights", type: "Movie", genre: "Animation, Family", rating: "6.7/10", description: "Clawdeen Wolf travels to Scaris to compete for a chance to apprentice with the legendary fashion designer, Madame Ghostier.", image: "images/scaris_city_of_frights.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3611432" },
-                { id: 108, title: "Monster High: 13 Wishes", type: "Movie", genre: "Animation, Fantasy", rating: "6.8/10", description: "Howleen Wolf discovers an ancient genie lantern and is granted 13 wishes, but soon learns that each wish comes with a dark side.", image: "images/13_wishes.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3159812" },
-                { id: 109, title: "Monster High: Frights, Camera, Action!", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir to the Vampire Throne and travels to Transylvania for a royal coronation.", image: "images/frights_camera_action.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3565904" },
-                { id: 110, title: "Monster High: Freaky Fusion", type: "Movie", genre: "Animation, Family", rating: "6.8/10", description: "While trying to help Frankie learn about her past, the ghouls travel back in time and accidentally fuse some of their bodies together.", image: "images/freaky_fusion.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3824344" },
-                { id: 111, title: "Monster High: Haunted", type: "Movie", genre: "Animation, Family", rating: "6.7/10", description: "The ghouls become ghosts to follow Spectra Vondergeist and discover why Monster High is being haunted.", image: "images/haunted.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4137924" },
-                { id: 112, title: "Monster High: Boo York, Boo York", type: "Movie", genre: "Animation, Musical", rating: "6.9/10", description: "The ghouls travel to Boo York to attend a gala celebrating a magical comet, where they get caught up in monster politics and musical numbers.", image: "images/boo_york_boo_york.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4779496" },
-                { id: 113, title: "Monster High: Great Scarrier Reef", type: "Movie", genre: "Animation, Family", rating: "6.6/10", description: "When the ghouls are pulled into the school pool, they're transported to the Great Scarrier Reef, where Lagoona must confront her past.", image: "images/great_scarrier_reef.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt5475710" },
+                { id: 101, title: "Monster High: New Ghoul at School", type: "Movie", genre: "Animation", rating: "6.8/10", description: "As the new ghoul in school, Frankie Stein is a bit of a social outcast. But when she's framed for a crime she didn't commit, she must team up with her new friends to clear her name.", image: "images/new_ghoul_at_school.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt1789846" },
+                { id: 102, title: "Monster High: Fright On!", type: "Movie", genre: "Animation", rating: "6.9/10", description: "The historic rivalry between werewolves and vampires threatens to disrupt the peace at Monster High, and it's up to Frankie and her friends to bring everyone together.", image: "images/fright_on.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2615666" },
+                { id: 103, title: "Monster High: Why Do Ghouls Fall in Love?", type: "Movie", genre: "Animation", rating: "7.1/10", description: "Draculaura's Sweet 1600th birthday takes a chaotic turn when two old flames, Clawd and Valentine, return to vie for her affection.", image: "images/why_do_ghouls_fall_in_love.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2168938" },
+                { id: 104, title: "Monster High: Escape from Skull Shores", type: "Movie", genre: "Animation", rating: "6.8/10", description: "After being shipwrecked on a mysterious island, the ghouls must survive the wild jungle and a mysterious Beast who isn't what he seems.", image: "images/escape_from_skull_shores.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2395337" },
+                { id: 105, title: "Monster High: Friday Night Frights", type: "Movie", genre: "Animation", rating: "7.0/10", description: "After the boys are injured, Frankie convinces her friends to join the Skultimate Roller Maze Championships to take back the school's crest.", image: "images/friday_night_frights.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2650548" },
+                { id: 106, title: "Monster High: Ghouls Rule", type: "Movie", genre: "Animation", rating: "6.6/10", description: "Frankie and her friends learn about the old conflict between 'Normies' and monsters and decide it's time to celebrate their unique differences.", image: "images/ghouls_rule.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt2446108" },
+                { id: 107, title: "Monster High: Scaris: City of Frights", type: "Movie", genre: "Animation", rating: "6.7/10", description: "Clawdeen Wolf travels to Scaris to compete for a chance to apprentice with the legendary fashion designer, Madame Ghostier.", image: "images/scaris_city_of_frights.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3611432" },
+                { id: 108, title: "Monster High: 13 Wishes", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Howleen Wolf discovers an ancient genie lantern and is granted 13 wishes, but soon learns that each wish comes with a dark side.", image: "images/13_wishes.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3159812" },
+                { id: 109, title: "Monster High: Frights, Camera, Action!", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Draculaura is led to believe she's the rightful heir to the Vampire Throne and travels to Transylvania for a royal coronation.", image: "images/frights_camera_action.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3565904" },
+                { id: 110, title: "Monster High: Freaky Fusion", type: "Movie", genre: "Animation", rating: "6.8/10", description: "While trying to help Frankie learn about her past, the ghouls travel back in time and accidentally fuse some of their bodies together.", image: "images/freaky_fusion.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt3824344" },
+                { id: 111, title: "Monster High: Haunted", type: "Movie", genre: "Animation", rating: "6.7/10", description: "The ghouls become ghosts to follow Spectra Vondergeist and discover why Monster High is being haunted.", image: "images/haunted.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4137924" },
+                { id: 112, title: "Monster High: Boo York, Boo York", type: "Movie", genre: "Animation", rating: "6.9/10", description: "The ghouls travel to Boo York to attend a gala celebrating a magical comet, where they get caught up in monster politics and musical numbers.", image: "images/boo_york_boo_york.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4779496" },
+                { id: 113, title: "Monster High: Great Scarrier Reef", type: "Movie", genre: "Animation", rating: "6.6/10", description: "When the ghouls are pulled into the school pool, they're transported to the Great Scarrier Reef, where Lagoona must confront her past.", image: "images/great_scarrier_reef.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt5475710" },
             ],
             "my-little-pony": [
-                { id: 201, title: "My Little Pony: Equestria Girls", type: "Movie", genre: "Animation, Comedy", rating: "6.2/10", description: "Via a magic mirror, Twilight Sparkle travels into an alternate universe in order to recover a crown that was stolen from the Crystal Empire.", image: "images/equestria_girls.png", heroImage: "images/equestria_girls.png", embedSrc: "https://vidsrc.to/embed/movie/tt2908228" },
-                { id: 202, title: "My Little Pony: Equestria Girls - Rainbow Rocks", type: "Movie", genre: "Animation, Comedy", rating: "7.1/10", description: "Canterlot High is hosting a musical showcase, and Rainbow Dash, Applejack, Pinkie Pie, Rarity, and Fluttershy are going to be performing with their new band, The Rainbooms.", image: "images/rainbow_rocks.png", embedSrc: "https://vidsrc.to/embed/movie/tt3529198" },
-                { id: 203, title: "My Little Pony: Equestria Girls - Friendship Games", type: "Movie", genre: "Animation, Comedy", rating: "6.9/10", description: "Canterlot High meets its rival school, Crystal Prep Academy, in a competition that's a long-standing tradition: the Friendship Games.", image: "images/friendship_games.png", embedSrc: "https://vidsrc.to/embed/movie/tt4450396" },
-                { id: 204, title: "My Little Pony: Equestria Girls - Legend of Everfree", type: "Movie", genre: "Animation, Comedy", rating: "6.7/10", description: "The students of Canterlot High School go on a trip to Camp Everfree, where they discover a mysterious magical force from the forest.", image: "images/legend_of_everfree.png", embedSrc: "https://vidsrc.to/embed/movie/tt5474644" },
-                { id: 205, title: "My Little Pony: Rollercoaster of Friendship", type: "Movie", genre: "Animation, Short", rating: "6.8/10", description: "Rarity's summer job at the new Equestria Land theme park is threatened by the social media savvy Vignette Valencia.", image: "images/rollercoaster_of_friendship.png", embedSrc: "https://vidsrc.to/embed/movie/tt7869818" },
-                { id: 206, title: "My Little Pony: Forgotten Friendship", type: "Movie", genre: "Animation, Family", rating: "7.5/10", description: "Sunset Shimmer discovers that her friends' good memories of her have been erased, and she must find the culprit and restore their friendship.", image: "images/forgotten_friendship.png", embedSrc: "https://vidsrc.to/embed/movie/tt8717590" },
-                { id: 207, title: "My Little Pony: Spring Breakdown", type: "Movie", genre: "Animation, Short", rating: "6.9/10", description: "The girls take a cruise for spring break, but their trip takes a magical turn when Rainbow Dash's obsession with fighting evil leads them to a strange island.", image: "images/spring_breakdown.png", embedSrc: "https://vidsrc.to/embed/movie/tt8734872" },
+                { id: 201, title: "My Little Pony: Equestria Girls", type: "Movie", genre: "Animation", rating: "6.2/10", description: "Via a magic mirror, Twilight Sparkle travels into an alternate universe in order to recover a crown that was stolen from the Crystal Empire.", image: "images/equestria_girls.png", heroImage: "images/equestria_girls.png", embedSrc: "https://vidsrc.to/embed/movie/tt2908228" },
+                { id: 202, title: "My Little Pony: Equestria Girls - Rainbow Rocks", type: "Movie", genre: "Animation", rating: "7.1/10", description: "Canterlot High is hosting a musical showcase, and Rainbow Dash, Applejack, Pinkie Pie, Rarity, and Fluttershy are going to be performing with their new band, The Rainbooms.", image: "images/rainbow_rocks.png", embedSrc: "https://vidsrc.to/embed/movie/tt3529198" },
+                { id: 203, title: "My Little Pony: Equestria Girls - Friendship Games", type: "Movie", genre: "Animation", rating: "6.9/10", description: "Canterlot High meets its rival school, Crystal Prep Academy, in a competition that's a long-standing tradition: the Friendship Games.", image: "images/friendship_games.png", embedSrc: "https://vidsrc.to/embed/movie/tt4450396" },
+                { id: 204, title: "My Little Pony: Equestria Girls - Legend of Everfree", type: "Movie", genre: "Animation", rating: "6.7/10", description: "The students of Canterlot High School go on a trip to Camp Everfree, where they discover a mysterious magical force from the forest.", image: "images/legend_of_everfree.png", embedSrc: "https://vidsrc.to/embed/movie/tt5474644" },
+                { id: 205, title: "My Little Pony: Rollercoaster of Friendship", type: "Movie", genre: "Animation", rating: "6.8/10", description: "Rarity's summer job at the new Equestria Land theme park is threatened by the social media savvy Vignette Valencia.", image: "images/rollercoaster_of_friendship.png", embedSrc: "https://vidsrc.to/embed/movie/tt7869818" },
+                { id: 206, title: "My Little Pony: Forgotten Friendship", type: "Movie", genre: "Animation", rating: "7.5/10", description: "Sunset Shimmer discovers that her friends' good memories of her have been erased, and she must find the culprit and restore their friendship.", image: "images/forgotten_friendship.png", embedSrc: "https://vidsrc.to/embed/movie/tt8717590" },
+                { id: 207, title: "My Little Pony: Spring Breakdown", type: "Movie", genre: "Animation", rating: "6.9/10", description: "The girls take a cruise for spring break, but their trip takes a magical turn when Rainbow Dash's obsession with fighting evil leads them to a strange island.", image: "images/spring_breakdown.png", embedSrc: "https://vidsrc.to/embed/movie/tt8734872" },
+            ],
+            "modern-horror": [
+                { id: 301, title: "M3GAN", type: "Movie", genre: "Horror", rating: "6.4/10", description: "A robotics engineer at a toy company builds a life-like doll that begins to take on a life of its own.", image: "images/m3gan.png", heroImage: "images/m3gan_hero.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt8760708" },
+                { id: 302, title: "M3GAN 2.0", type: "Movie", genre: "Horror", rating: "N/A", description: "Plot details are under wraps for the sequel to the hit horror film 'M3GAN'.", image: "images/m3gan_2.png", embedSrc: "https://vidsrc.to/embed/movie/tt26342662" },
+                { id: 303, title: "Five Nights at Freddy's", type: "Movie", genre: "Horror", rating: "5.5/10", description: "A troubled security guard begins working at Freddy Fazbear's Pizza. During his first night on the job, he realizes that the night shift won't be so easy to get through.", image: "images/fnaf_movie.png", embedSrc: "https://vidsrc.to/embed/movie/tt4589218" },
             ]
         };
 
@@ -260,6 +270,9 @@
         const mainHeader = document.getElementById('mainHeader');
         const pageContainer = document.getElementById('pageContainer');
         const mainFooter = document.getElementById('mainFooter');
+        const playerPage = document.getElementById('playerPage');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const closePlayerBtn = document.getElementById('closePlayerBtn');
         
         const modal = document.getElementById('modal');
         const closeModalBtn = document.getElementById('closeModal');
@@ -271,15 +284,32 @@
         const episodesContent = document.getElementById('episodesContent');
         const seasonSelector = document.getElementById('seasonSelector');
         const episodeList = document.getElementById('episodeList');
+        const recommendationsGrid = document.getElementById('recommendationsGrid');
 
         // --- PLAYER LOGIC ---
         const playVideo = (content) => {
             if (!content || !content.embedSrc) {
-                console.error("No video source provided.");
+                console.error("No embed source provided.");
                 return;
             }
-            window.open(content.embedSrc, '_blank');
+            mainHeader.classList.add('hidden');
+            pageContainer.classList.add('hidden');
+            mainFooter.classList.add('hidden');
+            playerPage.classList.remove('hidden');
+            
+            videoPlayer.src = content.embedSrc;
+            closeModal();
         };
+
+        const closePlayer = () => {
+            mainHeader.classList.remove('hidden');
+            pageContainer.classList.remove('hidden');
+            mainFooter.classList.remove('hidden');
+            playerPage.classList.add('hidden');
+            videoPlayer.src = "";
+        };
+        closePlayerBtn.addEventListener('click', closePlayer);
+
 
         // --- PAGE NAVIGATION ---
         const showPage = (pageId, filter = null) => {
@@ -356,23 +386,6 @@
         detailsTab.addEventListener('click', () => switchModalTab('details'));
         episodesTab.addEventListener('click', () => switchModalTab('episodes'));
 
-        const populateEpisodes = (seasons, seasonNumber) => {
-            const season = seasons.find(s => s.season == seasonNumber);
-            episodeList.innerHTML = '';
-            if (season) {
-                season.episodes.forEach(ep => {
-                    const epElement = document.createElement('div');
-                    epElement.className = 'border-b border-gray-700 pb-2 cursor-pointer hover:bg-gray-700 p-2 rounded';
-                    epElement.innerHTML = `
-                        <h4 class="font-bold text-lg">${ep.episode}. ${ep.title}</h4>
-                        <p class="text-sm text-gray-400">${ep.description}</p>
-                    `;
-                    epElement.addEventListener('click', () => playVideo(ep));
-                    episodeList.appendChild(epElement);
-                });
-            }
-        };
-
         const openModal = (contentId) => {
             const content = findContentById(contentId);
             if (!content) return;
@@ -387,20 +400,12 @@
             document.getElementById('modalRating').textContent = content.rating;
             document.getElementById('modalType').textContent = content.type;
             updateModalMyListButton(content.id);
+            populateRecommendations(content.id, content.genre);
 
             document.getElementById('modalPlayBtn').onclick = () => playVideo(content);
 
             if (content.type === 'TV Show' && content.seasons) {
                 episodesTab.classList.remove('hidden');
-                seasonSelector.innerHTML = '';
-                content.seasons.forEach(season => {
-                    const option = document.createElement('option');
-                    option.value = season.season;
-                    option.textContent = `Season ${season.season}`;
-                    seasonSelector.appendChild(option);
-                });
-                populateEpisodes(content.seasons, seasonSelector.value);
-                seasonSelector.onchange = () => populateEpisodes(content.seasons, seasonSelector.value);
             } else {
                 episodesTab.classList.add('hidden');
             }
@@ -434,7 +439,7 @@
 
         const createCarousel = (title, contents) => {
             const section = document.createElement('div');
-            section.className = 'carousel-section relative'; // Added relative positioning
+            section.className = 'carousel-section relative'; 
             
             const heading = document.createElement('h3');
             heading.className = 'text-2xl font-bold mb-4';
@@ -453,7 +458,6 @@
             });
             container.appendChild(carousel);
             
-            // Arrows
             const prevArrow = document.createElement('button');
             prevArrow.className = 'carousel-arrow absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full z-10';
             prevArrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>';
@@ -480,10 +484,13 @@
             carouselSection.innerHTML = '';
             createCarousel('My Little Pony: Equestria Girls', movieData['my-little-pony']);
             createCarousel('Monster High', movieData['monster-high']);
+            createCarousel('Modern Horror', movieData['modern-horror']);
         };
         
         const setupHero = () => {
-            const heroContent = movieData['my-little-pony'][0];
+            const allContent = Object.values(movieData).flat();
+            const heroContent = allContent[Math.floor(Math.random() * allContent.length)];
+
             if(heroContent) {
                 const heroImage = document.getElementById('heroImage');
                 heroImage.src = heroContent.heroImage || heroContent.image;
@@ -494,6 +501,25 @@
                 document.getElementById('heroMoreInfoBtn').addEventListener('click', () => openModal(heroContent.id));
                 document.getElementById('heroPlayBtn').addEventListener('click', () => playVideo(heroContent));
             }
+        };
+
+        const populateRecommendations = (currentId, currentGenre) => {
+            const allContent = Object.values(movieData).flat();
+            const recommendations = allContent
+                .filter(item => item.id !== currentId && item.genre.includes(currentGenre.split(', ')[0]))
+                .sort(() => 0.5 - Math.random()) // Shuffle
+                .slice(0, 4);
+            
+            recommendationsGrid.innerHTML = '';
+            recommendations.forEach(item => {
+                const card = createContentCard(item);
+                card.onclick = () => {
+                    closeModal();
+                    // A small delay to allow the first modal to close smoothly
+                    setTimeout(() => openModal(item.id), 300);
+                };
+                recommendationsGrid.appendChild(card);
+            });
         };
 
         const populateGenresPage = (filter) => {
@@ -517,7 +543,7 @@
         };
         
         const populateNewAndPopularPage = () => {
-            const content = [...movieData['monster-high'].slice(0,6), ...movieData['my-little-pony'].slice(0,6)];
+            const content = [...movieData['monster-high'], ...movieData['my-little-pony'], ...movieData['modern-horror']];
             const grid = document.getElementById('newAndPopularGrid');
             grid.innerHTML = '';
             content.forEach(item => {
