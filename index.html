@@ -258,13 +258,14 @@
                 { id: 207, title: "My Little Pony: Spring Breakdown", type: "Movie", genre: "Animation", rating: "6.9/10", description: "The girls take a cruise for spring break, but their trip takes a magical turn when Rainbow Dash's obsession with fighting evil leads them to a strange island.", image: "images/spring_breakdown.png", embedSrc: "https://vidsrc.to/embed/movie/tt8734872" },
             ],
             "modern-horror": [
-                { id: 301, title: "M3GAN", type: "Movie", genre: "Horror", rating: "6.4/10", description: "A robotics engineer at a toy company builds a life-like doll that begins to take on a life of its own.", image: "images/m3gan.png", heroImage: "images/m3gan_hero.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt8760708" },
-                { id: 302, title: "M3GAN 2.0", type: "Movie", genre: "Horror", rating: "N/A", description: "Plot details are under wraps for the sequel to the hit horror film 'M3GAN'.", image: "images/m3gan_2.png", embedSrc: "https://vidsrc.to/embed/movie/tt26342662" },
-                { id: 303, title: "Five Nights at Freddy's", type: "Movie", genre: "Horror", rating: "5.5/10", description: "A troubled security guard begins working at Freddy Fazbear's Pizza. During his first night on the job, he realizes that the night shift won't be so easy to get through.", image: "images/fnaf_movie.png", embedSrc: "https://vidsrc.to/embed/movie/tt4589218" },
+                { id: 301, title: "M3GAN", type: "Movie", genre: "Horror", rating: "6.4/10", description: "A robotics engineer at a toy company builds a life-like doll that begins to take on a life of its own.", image: "images/m3gan.jpg", heroImage: "images/m3gan_hero.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt8760708" },
+                { id: 302, title: "M3GAN 2.0", type: "Movie", genre: "Horror", rating: "N/A", description: "Plot details are under wraps for the sequel to the hit horror film 'M3GAN'.", image: "images/m3gan_2.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt26342662" },
+                { id: 303, title: "Five Nights at Freddy's", type: "Movie", genre: "Horror", rating: "5.5/10", description: "A troubled security guard begins working at Freddy Fazbear's Pizza. During his first night on the job, he realizes that the night shift won't be so easy to get through.", image: "images/fnaf_movie.jpg", embedSrc: "https://vidsrc.to/embed/movie/tt4589218" },
             ]
         };
 
         let myList = [];
+        let continueWatching = [];
 
         // --- DOM ELEMENTS ---
         const mainHeader = document.getElementById('mainHeader');
@@ -292,6 +293,7 @@
                 console.error("No embed source provided.");
                 return;
             }
+            updateContinueWatching(content.id);
             mainHeader.classList.add('hidden');
             pageContainer.classList.add('hidden');
             mainFooter.classList.add('hidden');
@@ -337,7 +339,23 @@
             });
         });
 
-        // --- MY LIST LOGIC ---
+        // --- MY LIST & CONTINUE WATCHING LOGIC ---
+        const loadContinueWatching = () => {
+            const history = localStorage.getItem('cineStreamHistory');
+            if (history) {
+                continueWatching = JSON.parse(history);
+            }
+        };
+
+        const updateContinueWatching = (contentId) => {
+            continueWatching = continueWatching.filter(item => item.id !== contentId);
+            continueWatching.unshift({ id: contentId, timestamp: Date.now() });
+            if (continueWatching.length > 10) {
+                continueWatching = continueWatching.slice(0, 10);
+            }
+            localStorage.setItem('cineStreamHistory', JSON.stringify(continueWatching));
+        };
+
         const toggleMyList = (movieId) => {
             const movieIndex = myList.indexOf(movieId);
             if (movieIndex > -1) {
@@ -482,6 +500,14 @@
 
         const populateCarousels = () => {
             carouselSection.innerHTML = '';
+            if (continueWatching.length > 0) {
+                const continueWatchingContent = continueWatching
+                    .map(item => findContentById(item.id))
+                    .filter(Boolean); 
+                if (continueWatchingContent.length > 0) {
+                    createCarousel('Continue Watching', continueWatchingContent);
+                }
+            }
             createCarousel('My Little Pony: Equestria Girls', movieData['my-little-pony']);
             createCarousel('Monster High', movieData['monster-high']);
             createCarousel('Modern Horror', movieData['modern-horror']);
@@ -515,7 +541,6 @@
                 const card = createContentCard(item);
                 card.onclick = () => {
                     closeModal();
-                    // A small delay to allow the first modal to close smoothly
                     setTimeout(() => openModal(item.id), 300);
                 };
                 recommendationsGrid.appendChild(card);
@@ -544,7 +569,7 @@
         
         const populateNewAndPopularPage = () => {
             const content = [...movieData['monster-high'], ...movieData['my-little-pony'], ...movieData['modern-horror']];
-            const grid = document.getElementById('newAndPopularGrid');
+            const grid = document.getElementById('newAndPopularPage');
             grid.innerHTML = '';
             content.forEach(item => {
                 const card = createContentCard(item);
@@ -632,6 +657,7 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            loadContinueWatching();
             setupHero();
             populateCarousels();
             showPage('homePage'); // Set initial page
